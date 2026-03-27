@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>MachPay · 用 USDC 支付任何 API</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #03050C;
+            color: #F0F3FF;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #7DE0FF 0%, #6C5CE7 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.9rem;
+            letter-spacing: -0.02em;
+        }
+        .logo-icon {
+            background: linear-gradient(145deg, #6C5CE7, #3A2E9F);
+            width: 44px;
+            height: 44px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.7rem;
+            box-shadow: 0 0 12px rgba(108, 92, 231, 0.5);
+        }
+        .nav-links a {
+            color: #CBD5F0;
+            margin-left: 32px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: #6C5CE7; }
+        .btn-outline-sm {
+            background: transparent;
+            border: 1px solid rgba(108, 92, 231, 0.6);
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 500;
+            text-decoration: none;
+            color: #CBD5FF;
+        }
+        .btn-outline-sm:hover {
+            background: rgba(108, 92, 231, 0.15);
+            border-color: #6C5CE7;
+            color: white;
+        }
+
+        .btn-primary {
+            background: #6C5CE7;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.3);
+        }
+        .btn-primary:hover {
+            background: #5849c4;
+            transform: translateY(-2px);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(108, 92, 231, 0.7);
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 500;
+            color: #CBD5FF;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-outline:hover {
+            background: rgba(108, 92, 231, 0.1);
+            border-color: #6C5CE7;
+        }
+
+        .hero {
+            padding: 40px 0 70px;
+        }
+        .badge {
+            background: rgba(108, 92, 231, 0.15);
+            border-radius: 100px;
+            padding: 6px 16px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-bottom: 24px;
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 48px;
+            padding: 20px 0;
+            border-top: 1px solid rgba(108, 92, 231, 0.2);
+            border-bottom: 1px solid rgba(108, 92, 231, 0.2);
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+        .api-card {
+            background: rgba(12, 18, 32, 0.7);
+            backdrop-filter: blur(2px);
+            border-radius: 28px;
+            padding: 24px;
+            border: 1px solid rgba(108, 92, 231, 0.3);
+            transition: 0.2s;
+        }
+        .api-card:hover {
+            border-color: #6C5CE7;
+            transform: translateY(-4px);
+        }
+        .price-badge {
+            font-family: monospace;
+            background: #0F1425;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-top: 16px;
+        }
+
+        .steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            justify-content: space-between;
+            margin: 48px 0;
+        }
+        .step {
+            flex: 1;
+            background: #0A0F1C;
+            border-radius: 28px;
+            padding: 28px;
+            border-left: 3px solid #6C5CE7;
+        }
+
+        .code-block {
+            background: #0A0F1A;
+            border-radius: 24px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            border: 1px solid #1F2A44;
+        }
+
+        .footer {
+            background: #02040C;
+            padding: 48px 0 32px;
+            margin-top: 40px;
+            border-top: 1px solid #1A2340;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            .navbar { flex-direction: column; align-items: flex-start; }
+            .nav-links a { margin-left: 0; margin-right: 20px; }
+            .section-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="navbar">
+        <div class="logo">
+            <div class="logo-icon">⚡</div>
+            <span>Mach<span class="gradient-text">Pay</span></span>
+        </div>
+        <div class="nav-links">
+            <a href="#apis">AI 服务目录</a>
+            <a href="#howitworks">如何运作</a>
+            <a href="#pricing">定价</a>
+            <a href="#sdk">开发者 SDK</a>
+            <a href="#cli">MachPay CLI</a>
+            <a href="#" class="btn-outline-sm">控制台</a>
+        </div>
+    </div>
+</div>
+
+<main>
+    <div class="container hero">
+        <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+            <div class="badge">⚡ 兼容 x402 协议 </div>
+            <h1 style="font-size: 3.8rem; font-weight: 800; line-height: 1.2; margin-bottom: 20px;">
+                用 <span class="gradient-text">USDC</span><br>支付访问任何 AI 服务
+            </h1>
+            <p style="font-size: 1.25rem; color: #B8C7FF; max-width: 720px; margin: 0 auto 24px;">
+                任何 AI 代理、任何开发者、任何国家——只要拥有钱包和 USDC，立即访问所有付费 AI服务。<strong>无需注册、无计费周期、无需审批</strong>。
+            </p>
+            <div style="margin: 20px 0 12px;">
+                <span style="background: #0C1122; padding: 6px 18px; border-radius: 40px; font-size: 0.9rem;">✅ 20+ 服务商 · 200+ API端点 · AI模型 + 加密货币 + 美股 · 稳定币 USDC</span>
+            </div>
+            <div style="display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin: 40px 0 20px;">
+                <button class="btn-primary"><i class="fas fa-bolt"></i> 浏览 AI 服务目录</button>
+                <button class="btn-outline"><i class="fab fa-github"></i> 稳定币支付 SDK</button>
+            </div>
+            <div class="code-block" style="text-align: left; max-width: 620px; margin: 20px auto;">
+                <span style="color:#8A9BCC;"># 直接用 USDC 支付</span><br>
+                $ curl https://api.machpay.ai/v1/coinank/netflow/genmini<br>
+                <span style="color:#6C5CE7;"># 需要付费 → 自动支付 $0.00001 USDC → 获得数据 ✨</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 统计数字 -->
+    <div class="container">
+        <div class="stats-row">
+            <div class="stat-item"><div class="stat-number">200+</div><div>AI服务端点</div></div>
+            <div class="stat-item"><div class="stat-number">0 Gas</div><div>零手续费</div></div>
+            <div class="stat-item"><div class="stat-number">$0.00001</div><div>单次调用均价</div></div>
+            <div class="stat-item"><div class="stat-number">28.5万+</div><div>活跃 AI 代理</div></div>
+        </div>
+    </div>
+
+    <!-- API 示例 -->
+    <div class="container section" id="apis">
+        <div style="text-align: center;">
+            <h2 class="section-title">可以<span class="gradient-text">支付哪些AI服务？</span></h2>
+            <p class="section-sub">真实 AI服务、真实数据、真实价格。每次调用仅需一笔 USDC 微支付。</p>
+        </div>
+        <div class="api-grid">
+            <div class="api-card"><h3>📊 BTC 实时价格</h3><p>比特币实时行情与市场数据</p><div class="price-badge">$0.00001 / 次</div></div>
+            <div class="api-card"><h3>📈 市场异动扫描</h3><p>涨幅榜、鲸鱼追踪、巨鲸警报</p><div class="price-badge">$0.00002 / 次</div></div>
+            <div class="api-card"><h3>🤖 AI 交易信号</h3><p>AI 生成的多空信号</p><div class="price-badge">$0.00001 / 次</div></div>
+            <div class="api-card"><h3>🏦 美股实时报价</h3><p>纳斯达克/纽交所实时股价</p><div class="price-badge">$0.00001 / 次</div></div>
+            <div class="api-card"><h3>⛓️ 永续合约资金费率</h3><p>主流交易所资金费率</p><div class="price-badge">$0.00001 / 次</div></div>
+            <div class="api-card"><h3>🎯 期权快照</h3><p>Deribit / CME 期权流数据</p><div class="price-badge">$0.00003 / 次</div></div>
+        </div>
+        <div style="text-align: center; margin-top: 32px;"><i class="fas fa-arrow-right"></i> 另外 190+ 端点：AI 模型、NFT 分析、外汇、DeFi 总锁仓量等。</div>
+    </div>
+
+    <!-- 如何工作 -->
+    <div class="container section" id="howitworks">
+        <h2 class="section-title" style="text-align: center;">如何<span class="gradient-text">运作</span></h2>
+        <p class="section-sub" style="text-align: center;">无需账户、无需账单、无需订阅。钱包 + USDC = 即刻访问所有付费 AI。</p>
+        <div class="steps">
+            <div class="step"><span style="font-size: 2rem; font-weight: 800; color: #6C5CE7;">01</span><h3 style="margin: 12px 0;">选择 AI服务</h3><p>涵盖加密货币、AI工具、金融等专业 API。任何代理或开发者均可访问——无需审批、无需等待名单。</p></div>
+            <div class="step"><span style="font-size: 2rem; font-weight: 800; color: #6C5CE7;">02</span><h3 style="margin: 12px 0;">每次调用 $0.00001</h3><p>签署一次 EIP-3009 授权，USDC 从钱包扣除。无订阅、无发票。</p></div>
+            <div class="step"><span style="font-size: 2rem; font-weight: 800; color: #6C5CE7;">03</span><h3 style="margin: 12px 0;">数据毫秒级返回</h3><p>按需付费，无最低消费，无承诺。</p></div>
+        </div>
+        
+    </div>
+
+    <!-- 定价 + 成本优势 -->
+    <div class="container section" id="pricing">
+        <h2 class="section-title" style="text-align: center;">简单、<span class="gradient-text">透明的定价</span></h2>
+        <p class="section-sub" style="text-align: center;">只为使用付费。无订阅、无最低消费、无隐藏费用。</p>
+        <div class="api-grid" style="grid-template-columns: repeat(4,1fr);">
+            <div class="api-card"><i class="fas fa-coins"></i><h3>按次付费</h3><p>每个 API 调用固定 USDC 价格。</p></div>
+            <div class="api-card"><i class="fas fa-unlock-alt"></i><h3>无需注册</h3><p>无需账户、无需 KYC。</p></div>
+            <div class="api-card"><i class="fas fa-link"></i><h3>链上结算</h3><p>所有支付均在 Base 链上，透明可验证。</p></div>
+            <div class="api-card"><i class="fas fa-globe"></i><h3>全球访问</h3><p>任何拥有钱包的人均可使用付费 AI。</p></div>
+        </div>
+        <div class="code-block" style="margin-top: 40px; text-align: center; max-width: 500px; margin-left: auto; margin-right: auto;">
+            <strong>成本示例</strong><br>
+            调用 1,000,000 次 <span style="color:#6C5CE7;">coinank/netflow</span><br>
+            <span style="font-size: 1.5rem;">$10 USDC</span><br>
+            1,000,000 × $0.00001 = $10 · 零 Gas 费
+        </div>
+    </div>
+
+    <!-- SDK 集成 + 安全钱包 -->
+    <!-- <div class="container section" id="sdk">
+        <div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: center;">
+            <div style="flex: 1.2;">
+                <h2 class="section-title" style="margin-bottom: 16px;">SDK & <span class="gradient-text">集成</span></h2>
+                <p>选择你的语言。所有 SDK 均自动处理支付。</p>
+                <div class="code-block" style="margin: 24px 0;">
+                    <span style="color:#aaa;">$ npm install @machpay/sdk</span><br><br>
+                    <span style="color:#6C5CE7;">import</span> { MachPay } from <span style="color:#FFB86C;">'@machpay/sdk'</span><br><br>
+                    const client = <span style="color:#6C5CE7;">new</span> MachPay({<br>
+                    &nbsp;&nbsp;privateKey: process.env.WALLET_PRIVATE_KEY<br>
+                    });<br><br>
+                    // 获取 BTC 价格 — $0.00001<br>
+                    const price = await client.coinank.price('BTC');<br>
+                    console.log(price);
+                </div>
+                <p><i class="fas fa-shield-alt"></i> <strong>安全最佳实践：</strong> 使用专门用于 API 支付的钱包，与主资产完全隔离。</p>
+            </div>
+            <div style="flex: 1; background: #0A0F1A; border-radius: 28px; padding: 28px;">
+                <i class="fas fa-wallet" style="font-size: 2rem;"></i>
+                <h3>一个 EVM 地址 + USDC。仅此而已。</h3>
+                <p>无需注册，无需计费设置。全球任何代理或开发者都可以立即开始调用付费 API。</p>
+                <ul style="margin-top: 16px; list-style: none;">
+                    <li>🔗 任何 EVM 地址 — 几秒生成</li>
+                    <li>💵 稳定币USDC — 只为使用付费</li>
+                    <li>🔐 专用支付钱包 — 清晰隔离</li>
+                </ul>
+                <button class="btn-outline" style="margin-top: 24px;">领取测试 USDC →</button>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- MachPay CLI -->
+    <div class="container section" id="cli">
+        <div style="background: linear-gradient(135deg, #080E1A, #010101); border-radius: 48px; padding: 48px 32px; border: 1px solid #2A2F4F;">
+            <div style="text-align: center;">
+                <i class="fas fa-terminal" style="font-size: 2.5rem; color: #6C5CE7;"></i>
+                <h2 class="section-title" style="margin: 16px 0;">MachPay <span class="gradient-text">CLI</span></h2>
+                <p>基于 MachPay 的个人 AI 助手——用 USDC 支付，开箱即用。</p>
+                <div class="code-block" style="display: inline-block; text-align: left; margin: 24px auto;">
+                    curl -fsSL https://machpay.ai/install.sh | bash
+                </div>
+                <div class="steps" style="gap: 16px; margin-top: 20px;">
+                    <div class="step" style="flex:1;"><strong>📦 步骤 1</strong><br>运行安装命令</div>
+                    <div class="step" style="flex:1;"><strong>🔐 步骤 2</strong><br>自动生成钱包</div>
+                    <div class="step" style="flex:1;"><strong>💰 步骤 3</strong><br>扫码充值 USDC</div>
+                    <div class="step" style="flex:1;"><strong>🤖 步骤 4</strong><br>开始聊天，按次付费</div>
+                </div>
+                <div class="code-block" style="margin-top: 32px; text-align: left;">
+                    <span style="color:#8A9BCC;">$ openclaw</span><br>
+                    🦞 MachPay 已就绪。钱包: 0x29B0...8ae3<br>
+                    你: 分析近期 BTC 走势<br>
+                    🔍 查询 machpay... ($0.00002 USDC)<br>
+                    BTC $94,200 (+3.2% 24h), ETF 资金流入 +$3.42亿
+                </div>
+                <div style="margin-top: 32px;">
+                    <span class="badge">20+ 聊天平台 (Telegram, Discord, Slack, 微信, iMessage)</span>
+                    <span class="badge">22+ AI 模型 (GPT-5, Claude, Gemini, DeepSeek)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA 融资生态 -->
+    <div class="container" style="padding: 40px 0 60px;">
+        <div style="background: rgba(108, 92, 231, 0.08); border-radius: 48px; padding: 48px 32px; text-align: center; border: 1px solid #2A2F4F;">
+            <i class="fas fa-rocket" style="font-size: 2.8rem; color: #FFD966;"></i>
+            <h2 style="font-size: 2rem; margin: 16px 0;">加入 MachPay 的 Agent 经济体</h2>
+            <p style="max-width: 600px; margin: 0 auto 32px;">抢先体验、开发者资助，立即构建未来 M2M 支付。</p>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn-primary">申请 API 访问</button>
+                <button class="btn-outline">查看文档 →</button>
+            </div>
+            <div style="margin-top: 40px; font-size: 0.85rem; color: #7F8EAB;">
+                🔹 2026 Q2: 200+ 端点 · 🔹 种子轮 $1.2M · 🔹 获 x402 & Base 生态支持
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 32px;">
+            <div>
+                <div class="logo" style="margin-bottom: 12px;">
+                    <div class="logo-icon">⚡</div>
+                    <span>Mach<span class="gradient-text">Pay</span></span>
+                </div>
+                <p style="color:#6F7C9E;">为 AI 代理和开发者打造的<br>支付基础设施。</p>
+            </div>
+            <div><h4>产品</h4><p>AI服务 目录</p><p>SDK</p><p>CLI</p></div>
+            <div><h4>资源</h4><p>文档</p><p>GitHub</p><p>状态</p></div>
+            <div><h4>法律</h4><p>服务条款</p><p>隐私政策</p><p>许可证</p></div>
+        </div>
+        <div style="text-align: center; margin-top: 48px; border-top: 1px solid #1A2340; padding-top: 24px; color: #4F5D7E;">© 2026 MachPay — 为智能付费，不为订阅买单。</div>
+    </div>
+</footer>
+
+</body>
+</html>
