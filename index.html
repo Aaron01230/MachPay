@@ -116,6 +116,57 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255,255,255,0.05);
         }
+
+        /* 自定义深色主题微调 */
+        .bg-dark-card {
+            background: rgba(15, 15, 20, 0.7);
+            backdrop-filter: blur(4px);
+        }
+        .border-glow {
+            border: 1px solid rgba(39, 117, 202, 0.3);
+            transition: all 0.2s ease;
+        }
+        .border-glow:hover {
+            border-color: #2775ca;
+            box-shadow: 0 8px 20px -8px rgba(39, 117, 202, 0.3);
+        }
+        .gradient-text {
+            background: linear-gradient(120deg, #fff, #60a5fa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .code-block {
+            background: #0c0c10;
+            border-radius: 1rem;
+            border: 1px solid #2a2a2f;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+        }
+        .qr-sim {
+            background: repeating-linear-gradient(45deg, #1f2937, #1f2937 10px, #111827 10px, #111827 20px);
+            border-radius: 12px;
+        }
+        .step-icon {
+            background: linear-gradient(135deg, #1e2a3a, #0f1722);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2c3e66;
+            border-radius: 8px;
+        }
+        .btn-copy {
+            transition: all 0.15s;
+        }
+        .btn-copy:active {
+            transform: scale(0.96);
+        }
     </style>
 </head>
 <body>
@@ -306,43 +357,181 @@ console.log(flow, signals)</code></pre>
             </div>
         </section>
 
-        <!-- OpenMachPay 个人AI助手 -->
-        <section class="py-20 bg-black/60">
-            <div class="container-custom">
-                <div class="flex flex-col lg:flex-row gap-10 items-center">
-                    <div class="flex-1">
-                        <span class="text-4xl mb-2 inline-block">🦞</span>
-                        <h2 class="text-3xl font-bold">OpenMachPay</h2>
-                        <p class="text-gray-300 mt-2">基于 MachPay 驱动的个人AI助手 —— 用USDC支付，无需API密钥，安装即用。</p>
-                        <div class="mt-4 bg-black/30 rounded-xl p-3 font-mono text-sm">🍎 macOS / 🐧 Linux (Windows即将推出)</div>
-                        <pre class="mt-3 bg-black/50 text-sm"><code>curl -fsSL https://machpay.ai/install.sh | bash</code></pre>
-                        <div class="grid grid-cols-2 gap-2 mt-5 text-xs text-gray-400">
-                            <div>📦 步骤1: 运行安装命令</div><div>🔐 步骤2: 自动生成钱包</div>
-                            <div>💰 步骤3: 扫描二维码充值USDC</div><div>🤖 步骤4: 开始对话，按量付费</div>
-                        </div>
-                    </div>
-                    <div class="flex-1 bg-white/5 rounded-2xl p-5 border border-white/10">
-                        <div class="flex gap-2 items-center mb-3"><span class="bg-gray-700 w-3 h-3 rounded-full"></span><span class="bg-gray-700 w-3 h-3 rounded-full"></span><span class="bg-gray-700 w-3 h-3 rounded-full"></span><span class="text-xs text-gray-400 ml-2">AI 聊天演示</span></div>
-                        <div class="bg-black/40 p-3 rounded-xl">
-                            <div class="text-blue-300 text-sm">You</div>
-                            <div class="text-gray-200 text-sm mb-3">HyperLiquid上最大的鲸鱼们在做什么？</div>
-                            <div class="text-blue-300 text-sm">🦞 查询 MachPay API... ($0.00002 USDC)</div>
-                            <div class="text-gray-200 text-sm mt-1 whitespace-pre-wrap">Top HyperLiquid 鲸鱼头寸:<br>  1. 0x3f2a… 多头 BTC  $12.4M  PnL: +$1.8M<br>  2. 0x8b1c… 多头 ETH  $8.2M   PnL: +$423K<br>  3. 0xd4e7… 空头 SOL $5.1M   PnL: -$89K<br>鲸鱼情绪: 67% 看多, 33% 看空。偏多倾向。</div>
-                        </div>
-                    </div>
+        <!-- Hero 区域：基于claw402 个人AI助手 -->
+        <section class="pt-16 pb-10 md:pt-24 md:pb-16">
+            <div class="max-w-6xl mx-auto px-5 text-center">
+                <div class="inline-flex items-center gap-1 bg-white/5 rounded-full px-3 py-1 text-xs mb-5 border border-white/10">
+                    <span>🦞 基于 MachPay · x402 协议</span>
                 </div>
-                <div class="mt-8 text-center text-gray-400 text-sm border-t border-white/5 pt-6">
-                    <span>💰 钱包管理: $ openclaw wallet &nbsp;&nbsp;|&nbsp;&nbsp; 🔑 私钥本地存储，永不离开设备</span>
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">
+                    由 <span class="gradient-text">OpenClaw402</span> 驱动的<br>个人AI助手
+                </h1>
+                <p class="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto mt-5">
+                    使用 <strong class="text-blue-300">USDC</strong> 付款，无需API密钥，无需注册。<br>
+                    安装即用 — 聊天、调用数据、访问顶级AI模型，按次付费。
+                </p>
+                <div class="flex flex-wrap justify-center gap-3 mt-6 text-sm text-gray-400">
+                    <span>⚡ 零API密钥</span>
+                    <span>💸 按量支付 USDC</span>
+                    <span>🔐 本地钱包</span>
+                    <span>🤖 自主代理友好</span>
                 </div>
             </div>
         </section>
 
-        <!-- 支持的平台/模型 简化展示 -->
+        <!-- 安装命令区块 (macOS/Linux) -->
+        <section id="install" class="pb-8">
+            <div class="max-w-4xl mx-auto px-5">
+                <div class="bg-gradient-to-br from-gray-900/60 to-black/70 rounded-2xl border border-white/10 p-6 md:p-8 backdrop-blur-sm">
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+                        <div>
+                            <span class="text-xl font-semibold flex items-center gap-2">🍎 macOS / 🐧 Linux</span>
+                            <span class="text-xs text-gray-400 ml-1">Windows 版本即将推出</span>
+                        </div>
+                        <div class="text-xs bg-white/5 px-3 py-1 rounded-full">一键安装 · 开箱即用</div>
+                    </div>
+                    <div class="relative mt-2">
+                        <pre id="installCommand" class="code-block text-gray-200 text-sm p-4 pr-16 overflow-x-auto rounded-xl whitespace-pre-wrap break-all">curl -fsSL https://claw402.ai/install.sh | bash</pre>
+                        <button id="copyBtn" class="absolute top-3 right-3 bg-gray-800 hover:bg-gray-700 text-xs px-3 py-1.5 rounded-lg transition flex items-center gap-1 border border-gray-700">
+                            📋 复制
+                        </button>
+                    </div>
+                    <p class="text-gray-400 text-xs mt-3 flex items-center gap-1">🔐 安装脚本自动验证签名，安全可靠。运行后自动生成钱包。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 如何安装 四步骤 详细卡片 -->
         <section class="py-12">
-            <div class="container-custom">
-                <div class="grid md:grid-cols-2 gap-8 text-center">
-                    <div><h3 class="text-xl font-semibold">20+ 聊天平台</h3><p class="text-gray-400 text-sm mt-1">Telegram · WhatsApp · Discord · Slack · Signal · iMessage · WeChat · IRC · Matrix · Google Chat 等</p></div>
-                    <div><h3 class="text-xl font-semibold">20+ AI 模型</h3><p class="text-gray-400 text-sm mt-1">OpenAI GPT-5.4, o3 · Anthropic Claude · Google Gemini 3.1 Pro · DeepSeek · Qwen · xAI Grok 3 · Moonshot Kimi K2</p></div>
+            <div class="max-w-7xl mx-auto px-5">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl md:text-4xl font-bold">如何安装</h2>
+                    <p class="text-gray-400 mt-2">四个简单步骤 · 从零到AI助手</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- 步骤1 -->
+                    <div class="bg-white/5 rounded-2xl p-5 border border-white/10 hover:border-blue-500/50 transition-all text-center">
+                        <div class="w-12 h-12 mx-auto step-icon rounded-2xl flex items-center justify-center text-2xl mb-4">📦</div>
+                        <h3 class="text-xl font-bold">步骤 1</h3>
+                        <p class="text-gray-300 font-medium mt-1">运行安装命令</p>
+                        <p class="text-gray-400 text-sm mt-2">终端执行上方命令，自动下载 MachPay 二进制文件。</p>
+                    </div>
+                    <!-- 步骤2 -->
+                    <div class="bg-white/5 rounded-2xl p-5 border border-white/10 hover:border-blue-500/50 transition-all text-center">
+                        <div class="w-12 h-12 mx-auto step-icon rounded-2xl flex items-center justify-center text-2xl mb-4">🔐</div>
+                        <h3 class="text-xl font-bold">步骤 2</h3>
+                        <p class="text-gray-300 font-medium mt-1">钱包自动生成</p>
+                        <p class="text-gray-400 text-sm mt-2">首次运行自动创建 EVM 钱包，私钥加密存储在本地 ~/.openclaw/。</p>
+                    </div>
+                    <!-- 步骤3 模拟二维码充值 -->
+                    <div class="bg-white/5 rounded-2xl p-5 border border-white/10 hover:border-blue-500/50 transition-all text-center">
+                        <div class="w-12 h-12 mx-auto step-icon rounded-2xl flex items-center justify-center text-2xl mb-4">💰</div>
+                        <h3 class="text-xl font-bold">步骤 3</h3>
+                        <p class="text-gray-300 font-medium mt-1">充值 USDC (Base)</p>
+                        <p class="text-gray-400 text-sm mt-2">扫描下方二维码或复制地址，向钱包转入 Base 链 USDC。</p>
+                        <!-- 模拟二维码区域 -->
+                        <div class="mt-3 flex justify-center">
+                            <div class="qr-sim w-24 h-24 rounded-xl flex items-center justify-center border border-white/20 bg-black/40">
+                                <div class="text-center">
+                                    <span class="text-2xl">📱</span>
+                                    <div class="text-[8px] text-gray-400 mt-1">演示码</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-2 text-[11px] font-mono bg-black/40 rounded-full px-2 py-1 inline-block text-blue-300">0x29B0...8ae3</div>
+                    </div>
+                    <!-- 步骤4 -->
+                    <div class="bg-white/5 rounded-2xl p-5 border border-white/10 hover:border-blue-500/50 transition-all text-center">
+                        <div class="w-12 h-12 mx-auto step-icon rounded-2xl flex items-center justify-center text-2xl mb-4">🤖</div>
+                        <h3 class="text-xl font-bold">步骤 4</h3>
+                        <p class="text-gray-300 font-medium mt-1">开始聊天 · 按次付费</p>
+                        <p class="text-gray-400 text-sm mt-2">对话或调用 API，每次调用仅扣除 $0.00001 USDC，实时透明。</p>
+                        <div class="mt-3 text-xs text-green-400 bg-green-950/30 rounded-full inline-block px-3 py-1">已连接 22+ AI 模型</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 20+ 聊天平台 & 22+ AI模型双栏展示 -->
+        <section id="platforms" class="py-16 border-y border-white/5 bg-black/30">
+            <div class="max-w-7xl mx-auto px-5">
+                <div class="grid lg:grid-cols-2 gap-12">
+                    <!-- 聊天平台区域 -->
+                    <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
+                        <div class="flex items-center gap-2 text-3xl mb-3">💬</div>
+                        <h3 class="text-2xl font-bold">20+ 聊天平台</h3>
+                        <p class="text-gray-400 text-sm mb-5">在您已使用的平台上与 AI 助手对话</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">Telegram</span>
+                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">WhatsApp</span>
+                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">Discord</span>
+                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">Slack</span>
+                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">Signal</span>
+                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">iMessage</span>
+                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">WeChat</span>
+                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">IRC</span>
+                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">Matrix</span>
+                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">Google Chat</span>
+                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm border border-dashed border-gray-500">+10 更多</span>
+                        </div>
+                        <div class="mt-5 text-xs text-gray-400">支持群聊/私聊 · 插件化集成</div>
+                    </div>
+
+                    <!-- AI 模型区域 -->
+                    <div id="models" class="bg-white/5 rounded-2xl p-6 border border-white/10">
+                        <div class="flex items-center gap-2 text-3xl mb-3">🧠</div>
+                        <h3 class="text-2xl font-bold">22+ AI 模型</h3>
+                        <p class="text-gray-400 text-sm mb-5">一个钱包，即可访问所有顶级人工智能模型</p>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">OpenAI</span><div class="text-xs text-gray-300">GPT-5.4, o3</div></div>
+                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">Anthropic</span><div class="text-xs text-gray-300">Claude Opus, Sonnet</div></div>
+                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">Google</span><div class="text-xs text-gray-300">Gemini 3.1 Pro</div></div>
+                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">DeepSeek</span><div class="text-xs text-gray-300">Chat, Reasoner</div></div>
+                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">Qwen</span><div class="text-xs text-gray-300">Max, Plus</div></div>
+                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">xAI</span><div class="text-xs text-gray-300">Grok 3</div></div>
+                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">Moonshot</span><div class="text-xs text-gray-300">Kimi K2</div></div>
+                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">Mistral</span><div class="text-xs text-gray-300">Large, Small</div></div>
+                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">Cohere</span><div class="text-xs text-gray-300">Command-R+</div></div>
+                        </div>
+                        <div class="mt-4 text-xs text-gray-400 flex items-center gap-1">✨ 更多模型持续集成，按次调用，无需订阅</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 钱包管理和 AI 聊天演示 (像真实助手交互) -->
+        <section class="py-16">
+            <div class="max-w-6xl mx-auto px-5">
+                <div class="bg-black/40 rounded-2xl border border-white/10 p-6 md:p-8">
+                    <div class="flex flex-wrap md:flex-nowrap gap-8">
+                        <!-- 左侧钱包命令示例 -->
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold flex items-center gap-2">🔐 钱包管理</h3>
+                            <pre class="code-block text-gray-300 text-xs sm:text-sm p-3 mt-3 overflow-x-auto">$ openclaw wallet            # 查看地址 + QR码
+$ openclaw wallet generate   # 生成新钱包
+$ openclaw wallet import &lt;key&gt; # 导入现有私钥</pre>
+                            <p class="text-gray-400 text-xs mt-2">🔒 钱包密钥本地存储，永不离开设备。完全自主托管。</p>
+                            <div class="mt-4 flex gap-2 flex-wrap">
+                                <div class="bg-blue-950/40 rounded-xl px-3 py-2 text-xs flex items-center gap-1"><span>💰 余额: 12.43 USDC</span><span class="text-green-400">(演示)</span></div>
+                                <div class="bg-gray-800/40 rounded-xl px-3 py-2 text-xs">⛓️ Base 链 · 零gas抽象</div>
+                            </div>
+                        </div>
+                        <!-- 右侧 AI 聊天模拟对话 -->
+                        <div class="flex-1 border-l border-white/10 pl-6 md:pl-8">
+                            <h3 class="text-xl font-bold flex items-center gap-2">💬 AI 聊天演示</h3>
+                            <div class="mt-3 space-y-3">
+                                <div class="bg-gray-900/60 rounded-xl p-3">
+                                    <div class="text-blue-300 text-sm">You</div>
+                                    <div class="text-gray-200 text-sm">HyperLiquid 上最大的鲸鱼头寸是什么？</div>
+                                </div>
+                                <div class="bg-gray-800/40 rounded-xl p-3 border-l-2 border-blue-400">
+                                    <div class="text-blue-300 text-sm flex items-center gap-1">🦞 OpenClaw402 <span class="text-gray-500 text-[10px]">($0.00002 USDC)</span></div>
+                                    <div class="text-gray-200 text-sm whitespace-pre-wrap">📊 实时链上数据：<br>1. 0x3f2a… 多头 BTC $12.4M (+18% PnL)<br>2. 0x8b1c… 多头 ETH $8.2M (+5.2%)<br>3. 0xd4e7… 空头 SOL $5.1M (-3.1%)<br>鲸鱼情绪 68% 看多 → 偏多信号。</div>
+                                </div>
+                                <div class="text-right text-[10px] text-gray-500">按次付费 · 实时结算</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
