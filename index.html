@@ -2,204 +2,179 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>MachPay - 按需支付API，使用USDC</title>
-    <!-- 引入 Google Fonts 字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <!-- 基础样式重置与主题变量 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USDC API 支付平台 - 完整版</title>
     <style>
+        /* 全局基础样式 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', 'Fira Code', monospace;
+            scroll-behavior: smooth; /* 平滑滚动 */
         }
 
         body {
-            background-color: #010101;
-            font-family: 'Inter', sans-serif;
-            color: #eef2ff;
-            line-height: 1.5;
-            scroll-behavior: smooth;
-
+            background-color: #0a0a18;
+            background-image: 
+                linear-gradient(rgba(10, 10, 24, 0.95), rgba(10, 10, 24, 0.95)),
+                linear-gradient(to right, #0f0f23 1px, transparent 1px),
+                linear-gradient(to bottom, #0f0f23 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
             color: #ffffff;
             min-height: 100vh;
+            padding: 0; /* 移除原有body padding，避免导航栏错位 */
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 2rem;
-
-            
         }
 
-        /* 自定义滚动条 */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a0a0a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #2d3748;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #4a5568;
+        /* ===== 新增头部导航样式 ===== */
+        .header-nav {
+            width: 100%;
+            background-color: #0a0a18;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 999;
         }
 
-        /* 渐变文字工具类 */
-        .gradient-text {
-            background: linear-gradient(135deg, #FFFFFF 0%, #A0AEC0 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .accent-glow {
-            background: linear-gradient(115deg, #2775ca 0%, #00a6ff 100%);
-        }
-
-        .card-hover {
-            transition: all 0.25s ease;
-            border: 1px solid rgba(55, 65, 81, 0.3);
-        }
-        .card-hover:hover {
-            border-color: #2775ca;
-            transform: translateY(-4px);
-            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
-        }
-
-        /* 代码块样式 */
-        pre {
-            background: #0f0f12;
-            border-radius: 1rem;
-            padding: 1.25rem;
-            overflow-x: auto;
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 0.85rem;
-            border: 1px solid #262626;
-        }
-        code {
-            font-family: 'SF Mono', monospace;
-            background: #1a1a1f;
-            padding: 0.2rem 0.4rem;
-            border-radius: 0.5rem;
-            font-size: 0.85rem;
-        }
-
-        /* 按钮 */
-        .btn-primary {
-            background: #2775ca;
-            border: none;
-            transition: 0.2s;
-        }
-        .btn-primary:hover {
-            background: #1b5ba8;
-            transform: scale(0.98);
-            box-shadow: 0 0 12px rgba(39, 117, 202, 0.4);
-        }
-        .btn-outline {
-            border: 1px solid #3b4c5e;
-            background: transparent;
-        }
-        .btn-outline:hover {
-            border-color: #2775ca;
-            background: rgba(39, 117, 202, 0.1);
-        }
-
-        /* 布局 */
-        .container-custom {
-            max-width: 1280px;
+        .nav-container {
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #4096ff;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-item {
+            color: #b0b0c8;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+
+        .nav-item:hover {
+            color: #ffffff;
+        }
+
+        .nav-item.highlight {
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .nav-item.highlight::before {
+            content: "🔥";
+            font-size: 0.8rem;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #ffcc00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .lang-switch {
+            color: #b0b0c8;
+            background-color: rgba(255, 255, 255, 0.08);
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .theme-switch {
+            width: 24px;
+            height: 24px;
+            background-color: transparent;
+            border: none;
+            color: #b0b0c8;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* 移动端导航适配 */
         @media (max-width: 768px) {
-            .container-custom {
-                padding: 0 1.2rem;
+            .nav-menu {
+                display: none; /* 移动端隐藏菜单，可根据需求添加汉堡菜单 */
+            }
+            
+            .header-nav {
+                padding: 1rem;
             }
         }
 
-        /* 玻璃效果 */
-        .glass-panel {
-            background: rgba(10, 10, 15, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.05);
+        /* 通用间距控制 */
+        section {
+            width: 100%;
+            max-width: 1200px;
+            padding: 4rem 2rem; /* 恢复section的左右padding */
+            margin-top: 2rem; /* 与导航栏保持间距 */
+            border-bottom: rgb(70, 70, 70) 1px solid;
         }
 
-        /* 自定义深色主题微调 */
-        .bg-dark-card {
-            background: rgba(15, 15, 20, 0.7);
-            backdrop-filter: blur(4px);
-        }
-        .border-glow {
-            border: 1px solid rgba(39, 117, 202, 0.3);
-            transition: all 0.2s ease;
-        }
-        .border-glow:hover {
-            border-color: #2775ca;
-            box-shadow: 0 8px 20px -8px rgba(39, 117, 202, 0.3);
-        }
-        .gradient-text {
-            background: linear-gradient(120deg, #fff, #60a5fa);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .code-block {
-            background: #0c0c10;
-            border-radius: 1rem;
-            border: 1px solid #2a2a2f;
-            font-family: 'SF Mono', 'Fira Code', monospace;
-        }
-        .qr-sim {
-            background: repeating-linear-gradient(45deg, #1f2937, #1f2937 10px, #111827 10px, #111827 20px);
-            border-radius: 12px;
-        }
-        .step-icon {
-            background: linear-gradient(135deg, #1e2a3a, #0f1722);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        }
-        /* 自定义滚动条 */
-        ::-webkit-scrollbar {
-            width: 5px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a0a0a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #2c3e66;
-            border-radius: 8px;
-        }
-        .btn-copy {
-            transition: all 0.15s;
-        }
-        .btn-copy:active {
-            transform: scale(0.96);
-        }
-
-        /* 顶部协议标签 */
-        .protocol-tag {
-            background-color: #1a1a38;
-            border-radius: 20px;
-            padding: 0.4rem 1rem;
-            font-size: 0.85rem;
-            color: #8888a8;
-            margin-bottom: 2rem;
-            border: 1px solid #2a2a48;
-        }
-
-        .protocol-tag span {
-            color: #00ff9d;
-            margin-right: 0.3rem;
-        }
-
-        /* 主标题区域 */
+        /* 通用标题样式 */
         .main-title {
             font-size: 3.5rem;
             font-weight: 800;
             text-align: center;
             margin-bottom: 1.5rem;
             line-height: 1.2;
+        }
+
+        .section-main-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            color: #8888a8;
+            text-align: center;
+            margin-bottom: 4rem;
+            max-width: 800px;
+            display: inline-block;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .usdc-text {
@@ -209,14 +184,26 @@
             color: transparent;
         }
 
-        /* 副标题描述 */
-        .subtitle {
-            font-size: 1.1rem;
-            color: #b0b0c8;
+        /* 顶部协议标签 */
+        .protocol-tag {
+            background-color: #1a1a38;
+            border-radius: 20px;
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+            color: #8888a8;
+            border: 1px solid #2a2a48;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .center-div {
             text-align: center;
-            max-width: 800px;
-            line-height: 1.6;
-            margin-bottom: 2rem;
+        }
+
+        .protocol-tag span {
+            color: #00ff9d;
+            margin-right: 0.3rem;
         }
 
         /* 统计信息 */
@@ -232,6 +219,7 @@
             display: flex;
             gap: 1rem;
             margin-bottom: 4rem;
+            justify-content: center;
         }
 
         .btn {
@@ -241,11 +229,11 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            border: none;
         }
 
         .primary-btn {
             background: linear-gradient(90deg, #0066ff, #00a3ff);
-            border: none;
             color: #ffffff;
         }
 
@@ -271,6 +259,8 @@
             max-width: 900px;
             width: 100%;
             margin-bottom: 4rem;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .advantage-item {
@@ -301,6 +291,8 @@
             gap: 1.5rem;
             max-width: 1000px;
             width: 100%;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .code-card {
@@ -325,17 +317,9 @@
             border-radius: 50%;
         }
 
-        .dot-red {
-            background-color: #ff5f56;
-        }
-
-        .dot-yellow {
-            background-color: #ffbd2e;
-        }
-
-        .dot-green {
-            background-color: #27c93f;
-        }
+        .dot-red { background-color: #ff5f56; }
+        .dot-yellow { background-color: #ffbd2e; }
+        .dot-green { background-color: #27c93f; }
 
         .code-title {
             font-size: 0.9rem;
@@ -349,475 +333,1390 @@
             line-height: 1.5;
         }
 
-        .code-path {
+        .code-path { color: #00a3ff; }
+        .code-wallet { color: #ff5f56; }
+
+        /* 工作原理模块 */
+        .working-principle {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .principle-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .principle-steps::before {
+            content: '';
+            position: absolute;
+            top: 60px;
+            left: 15%;
+            right: 15%;
+            height: 2px;
+            background: linear-gradient(90deg, #0066ff, #9900ff, #00cc99);
+            opacity: 0.6;
+            z-index: 1;
+        }
+
+        .step-item {
+            flex: 1;
+            text-align: center;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #2a2a48;
+            border-radius: 12px;
+            background-color: #121228;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .step-icon::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .step-icon-1::after {
+            background-color: #0066ff;
+            content: '1';
+        }
+
+        .step-icon-2::after {
+            background-color: #9900ff;
+            content: '2';
+        }
+
+        .step-icon-3::after {
+            background-color: #00cc99;
+            content: '3';
+        }
+
+        .step-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: currentColor;
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .step-desc {
+            font-size: 0.9rem;
+            color: #8888a8;
+            line-height: 1.5;
+        }
+
+        .principle-note {
+            text-align: center;
+            color: #8888a8;
+            font-size: 0.9rem;
+            margin-top: 3rem;
+        }
+
+        /* 演示模块 */
+        .demo-section {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .demo-card {
+            background-color: #121228;
+            border: 1px solid #2a2a48;
+            border-radius: 12px;
+            padding: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .demo-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .demo-btn {
+            background-color: #0066ff;
+            border: none;
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .demo-content {
+            font-size: 0.9rem;
+            color: #8888a8;
+            line-height: 1.6;
+        }
+
+        .demo-note {
+            font-size: 0.85rem;
+            color: #666688;
+            margin-top: 1rem;
+        }
+
+        /* 定价模块 */
+        .pricing-section {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .pricing-cards {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .pricing-card {
+            background-color: #121228;
+            border: 1px solid #2a2a48;
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+            width: 240px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .pricing-icon {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
             color: #00a3ff;
         }
 
-        .code-wallet {
+        .pricing-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-desc {
+            font-size: 0.85rem;
+            color: #8888a8;
+            line-height: 1.5;
+        }
+
+        .cost-example {
+            background-color: #121228;
+            border: 1px solid #2a2a48;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .example-label {
+            font-size: 0.9rem;
+            color: #8888a8;
+            margin-bottom: 0.5rem;
+        }
+
+        .example-text {
+            font-size: 1rem;
+            color: #b0b0c8;
+            margin-bottom: 1.5rem;
+        }
+
+        .example-cost {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .example-calc {
+            font-size: 0.9rem;
+            color: #8888a8;
+            margin-bottom: 1rem;
+        }
+
+        .example-fee {
+            font-size: 0.85rem;
+            color: #00cc99;
+        }
+
+        /* 零摩擦要素模块 */
+        .zero-friction {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .friction-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #e0e0f0;
+        }
+
+        .friction-cards {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .friction-card {
+            background: linear-gradient(135deg, #121228 0%, #1a1a38 100%);
+            border: 1px solid #2a2a48;
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+            width: 320px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-1 { background: linear-gradient(135deg, #1a1228 0%, #2a1a48 100%); }
+        .card-2 { background: linear-gradient(135deg, #121a28 0%, #1a2a48 100%); }
+        .card-3 { background: linear-gradient(135deg, #1a1a28 0%, #2a2a48 100%); }
+
+        .card-icon {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #00a3ff;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: #b0b0c8;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .card-link {
+            color: #0066ff;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .card-link:hover {
+            color: #00a3ff;
+            text-decoration: underline;
+        }
+
+        /* SDK集成模块 */
+        .sdk-section {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .sdk-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            background-color: #121228;
+            border-radius: 8px;
+            padding: 0.3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tab-item {
+            padding: 0.6rem 1.5rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-active {
+            background-color: #0066ff;
+            color: #ffffff;
+        }
+
+        .tab-inactive {
+            color: #8888a8;
+        }
+
+        .tab-inactive:hover {
+            background-color: #1a1a38;
+            color: #b0b0c8;
+        }
+
+        /* 代码区域样式 */
+        .code-block {
+            background-color: #121228;
+            border: 1px solid #2a2a48;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            color: #e0e0f0;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .code-install { color: #8888a8; }
+        .token-keyword { color: #00a3ff; }
+        .token-comment { color: #666688; }
+        .token-string { color: #ff5f56; }
+        .token-number { color: #00cc99; }
+        .token-function { color: #9900ff; }
+        .token-console { color: #ffbd2e; }
+
+        /* 安全提示卡片 */
+        .security-card {
+            background: linear-gradient(135deg, #1a1228 0%, #2a1a48 100%);
+            border: 1px solid #2a2a48;
+            border-radius: 8px;
+            padding: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #b0b0c8;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .security-tag {
+            color: #ffbd2e;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        /* OpenClaw402模块 */
+        .openclaw-section {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .top-tag {
+            background-color: #121228;
+            border: 1px solid #2a2a48;
+            border-radius: 20px;
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+            color: #00cc99;
+            margin-bottom: 2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .top-tag span {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .main-heading {
+            font-size: 3rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .system-tags {
+            font-size: 0.9rem;
+            color: #8888a8;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .system-tags span {
             color: #ff5f56;
+            margin-right: 0.5rem;
+        }
+
+        .install-command {
+            background-color: #121228;
+            border: 1px solid #2a2a48;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            max-width: 700px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .command-text {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            color: #00cc99;
+        }
+
+        .copy-btn {
+            background-color: #1a1a38;
+            border: 1px solid #2a2a48;
+            color: #8888a8;
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background-color: #2a2a48;
+            color: #ffffff;
+        }
+
+        .install-steps {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 5rem;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .install-step-card {
+            background: linear-gradient(135deg, #121228 0%, #1a1a38 100%);
+            border: 1px solid #2a2a48;
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+            width: 240px;
+            text-align: center;
+        }
+
+        .step-number {
+            font-size: 0.9rem;
+            color: #0066ff;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 5rem;
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #121228 0%, #1a1a38 100%);
+            border: 1px solid #2a2a48;
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .feature-desc {
+            font-size: 0.9rem;
+            color: #8888a8;
+            margin-bottom: 1.5rem;
+        }
+
+        .platform-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .platform-tag {
+            background-color: #1a1a38;
+            border: 1px solid #0066ff;
+            color: #00a3ff;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .model-list {
+            list-style: none;
+        }
+
+        .model-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #2a2a48;
+        }
+
+        .model-item:last-child {
+            border-bottom: none;
+        }
+
+        .model-name {
+            color: #00cc99;
+            font-weight: 600;
+        }
+
+        .model-desc {
+            color: #8888a8;
+            font-size: 0.9rem;
+        }
+
+        .chat-demo {
+            background-color: #121228;
+            border: 1px solid #2a2a48;
+            border-radius: 12px;
+            padding: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto 5rem;
+        }
+
+        .chat-query {
+            background-color: #1a1a38;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .chat-query-label {
+            color: #0066ff;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .chat-query-text {
+            color: #ffffff;
+            font-size: 0.95rem;
+        }
+
+        .chat-response {
+            background-color: #1a1a38;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .response-loading {
+            color: #00cc99;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .response-content {
+            color: #b0b0c8;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .wallet-section {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 3rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .wallet-label {
+            font-size: 0.9rem;
+            color: #8888a8;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .wallet-commands {
+            background-color: #121228;
+            border: 1px solid #2a2a48;
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #e0e0f0;
+            line-height: 1.8;
+        }
+
+        .wallet-command-text { color: #00a3ff; }
+        .wallet-comment { color: #666688; }
+
+        .footer-note {
+            font-size: 0.9rem;
+            color: #8888a8;
+            text-align: center;
+            margin-top: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-link {
+            color: #0066ff;
+            text-decoration: none;
+            margin-left: 0.5rem;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
         }
 
         /* 响应式适配 */
         @media (max-width: 768px) {
-            .main-title {
-                font-size: 2.2rem;
-            }
+            .main-title { font-size: 2.2rem; }
+            .section-main-title { font-size: 2rem; }
+            .main-heading { font-size: 2rem; }
 
-            .advantages {
+            .advantages, .principle-steps, .features-grid {
                 flex-direction: column;
                 gap: 2rem;
+                align-items: center;
             }
 
-            .code-demo {
+            .principle-steps::before { display: none; }
+
+            .code-demo, .install-command {
                 flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
             }
 
-            .code-card {
-                width: 100%;
+            .code-card { width: 100%; }
+
+            .pricing-cards, .install-steps {
+                flex-direction: column;
+                align-items: center;
             }
+
+            .pricing-card, .install-step-card {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .example-cost { font-size: 3rem; }
+
+            .sdk-tabs { flex-wrap: wrap; }
+            .tab-item {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            
         }
+
+        /* ===== 可支付费用模块样式 ===== */
+        .payment-features {
+                width: 100%;
+                max-width: 1200px;
+                padding: 4rem 2rem; /* 与其他section保持一致的内边距 */
+                margin-top: 2rem;
+            }
+
+            .payment-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+                max-width: 1100px;
+                margin: 0 auto;
+            }
+
+            .payment-card {
+                background-color: #0f0f23;
+                border: 1px solid #1a1a38;
+                border-radius: 8px;
+                padding: 2rem 1.5rem;
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .payment-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.2rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .icon-bitcoin { background-color: #8c7853; color: #fff; }
+            .icon-market { background-color: #008060; color: #fff; }
+            .icon-ai { background-color: #5a3e85; color: #fff; }
+            .icon-stock { background-color: #1e3a8a; color: #fff; }
+            .icon-rate { background-color: #008060; color: #fff; }
+            .icon-option { background-color: #8b4513; color: #fff; }
+
+            .payment-title {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #ffffff;
+            }
+
+            .payment-price {
+                font-size: 1.4rem;
+                font-weight: 700;
+                color: #00ff9d;
+            }
+
+            .payment-unit {
+                font-size: 0.9rem;
+                color: #8888a8;
+                margin-left: 0.5rem;
+            }
+
+            /* 移动端适配 - 可支付费用模块 */
+            @media (max-width: 768px) {
+                .payment-grid {
+                    grid-template-columns: 1fr; /* 移动端单列显示 */
+                }
+            }
+
+            /* 页面底部样式 */
+            .footer {
+                width: 100%;
+                max-width: 1200px;
+                margin: 4rem auto 2rem;
+                padding: 0 2rem;
+                color: #8888a8;
+                font-size: 0.9rem;
+            }
+
+            .footer-container {
+                display: flex;
+                justify-content: space-between;
+                padding-bottom: 2rem;
+                border-bottom: 1px solid #1a1a38;
+                margin-bottom: 2rem;
+            }
+
+            .footer-brand {
+                flex: 1;
+            }
+
+            .footer-logo {
+                font-size: 1.5rem;
+                font-weight: 800;
+                color: #ffffff;
+                margin-bottom: 1rem;
+            }
+
+            .footer-logo span {
+                color: #0066ff;
+            }
+
+            .footer-desc {
+                margin-bottom: 1rem;
+                line-height: 1.4;
+            }
+
+            .footer-built {
+                font-size: 0.85rem;
+            }
+
+            .footer-built span {
+                color: #ff5f56;
+                margin: 0 0.2rem;
+            }
+
+            .footer-links {
+                display: flex;
+                gap: 6rem;
+            }
+
+            .footer-column {
+                display: flex;
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+
+            .column-title {
+                font-size: 1rem;
+                font-weight: 700;
+                color: #ffffff;
+                margin-bottom: 0.5rem;
+            }
+
+            .footer-link {
+                color: #8888a8;
+                text-decoration: none;
+                transition: color 0.2s ease;
+            }
+
+            .footer-link:hover {
+                color: #ffffff;
+            }
+
+            .footer-bottom {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 0.85rem;
+            }
+
+            .footer-copyright {
+                color: #666688;
+            }
+
+            .footer-network {
+                color: #666688;
+            }
+
+            /* 移动端适配 */
+            @media (max-width: 768px) {
+                .footer-container {
+                    flex-direction: column;
+                    gap: 3rem;
+                }
+                
+                .footer-links {
+                    flex-direction: column;
+                    gap: 2rem;
+                }
+                
+                .footer-bottom {
+                    flex-direction: column;
+                    gap: 1rem;
+                    text-align: center;
+                }
+            }
     </style>
 </head>
 <body>
-
-    <!-- 导航栏 -->
-    <nav class="glass-panel sticky top-0 z-50 border-b border-white/5" style="background: rgba(1,1,1,0.85); backdrop-filter: blur(12px);">
-        <div class="container-custom flex items-center justify-between py-4 flex-wrap gap-4">
-            <!-- LOGO 改为 MachPay -->
-            <div class="flex items-center gap-2">
-                <span class="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">MachPay</span>
-                <span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full border border-blue-500/30">α</span>
+    <!-- ===== 新增头部导航菜单 ===== -->
+    <header class="header-nav">
+        <div class="nav-container">
+            <!-- LOGO 区域 -->
+            <a href="#" class="logo">
+                Mach<span>Pay</span>
+            </a>
+            
+            <!-- 导航菜单 -->
+            <div class="nav-menu">
+                <a href="#" class="nav-item">市场</a>
+                <a href="#" class="nav-item">工作原理</a>
+                <a href="#" class="nav-item">开始使用</a>
+                <a href="#" class="nav-item highlight">ClawMachPay</a>
+                <a href="#" class="nav-item">SDK</a>
+                <a href="#" class="nav-item">定价</a>
+                <a href="#" class="nav-item">常问问题</a>
             </div>
-            <div class="flex items-center gap-6 text-sm font-medium">
-                <a href="#" class="hover:text-blue-400 transition">目录</a>
-                <a href="#" class="hover:text-blue-400 transition">定价</a>
-                <a href="#" class="hover:text-blue-400 transition">SDK</a>
-                <button class="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-sm hover:bg-white/10 transition">控制台</button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- 顶部协议标签 -->
-    <div class="protocol-tag">
-        <span>●</span>基于 x402 协议
-    </div>
-
-    <!-- 主标题 -->
-    <h1 class="main-title">使用 <span class="usdc-text">USDC</span> 支付任何 API 的费用。</h1>
-
-    <!-- 副标题描述 -->
-    <p class="subtitle">
-        任何人工智能代理、任何开发者、任何国家/地区——只要您拥有钱包和 USDC，<br>
-        即可立即访问所有付费 API。无需注册。无需 API 密钥。没有计费周期。无需审批。永远如此。
-    </p>
-
-    <!-- 统计信息 -->
-    <div class="stats">
-        16 家提供商 · 247 个终端 · AI 模型 + 加密货币 + 美国股票 · 基础链 USDC
-    </div>
-
-    <!-- 按钮组 -->
-    <div class="btn-group">
-        <button class="btn primary-btn">浏览 API</button>
-        <button class="btn secondary-btn">工作原理</button>
-    </div>
-
-    <!-- 核心优势 -->
-    <div class="advantages">
-        <div class="advantage-item">
-            <div class="advantage-number">一经请求</div>
-            <div class="advantage-desc">按需付费——代理商仅在打电话时才需付费</div>
-        </div>
-        <div class="advantage-item">
-            <div class="advantage-number">零</div>
-            <div class="advantage-desc">障碍——无需钥匙、无需注册、无需账单</div>
-        </div>
-        <div class="advantage-item">
-            <div class="advantage-number">100%</div>
-            <div class="advantage-desc">链上支付和可验证支付</div>
-        </div>
-    </div>
-
-    <!-- 代码演示区域 -->
-    <div class="code-demo">
-        <!-- 左侧API调用代码 -->
-        <div class="code-card">
-            <div class="code-header">
-                <div class="dot dot-red"></div>
-                <div class="dot dot-yellow"></div>
-                <div class="dot dot-green"></div>
-                <div class="code-title">API 调用</div>
-            </div>
-            <div class="code-content">
-                #无需 API 密钥 - 直接使用 USDC 支付<br>
-                $ curl <span class="code-path">https://claw402.ai/api/v1/coinank/netflow</span>
+            
+            <!-- 右侧用户区域 -->
+            <div class="nav-right">
+                <div class="avatar">☀️</div>
+                <button class="lang-switch">中文</button>
+                <button class="theme-switch">🌙</button>
             </div>
         </div>
+    </header>
 
-        <!-- 右侧OpenClaw402代码 -->
-        <div class="code-card">
-            <div class="code-header">
-                <div class="dot dot-red"></div>
-                <div class="dot dot-yellow"></div>
-                <div class="dot dot-green"></div>
-                <div class="code-title">OpenClaw402</div>
+    <!-- 第一部分：首页核心模块 -->
+     
+    <section style="padding-top: 0.5rem;">
+        <div class="center-div">
+            <div class="protocol-tag">
+                <span>●</span>基于 x402 协议
             </div>
-            <div class="code-content">
-                $ openClaw 🔥 OpenClaw402 已准备就绪。钱包: <span class="code-wallet">0x29B0</span>.
-            </div>
+         </div>
+        <h1 class="main-title">使用 <span class="usdc-text">USDC</span> 支付任何 AI 的费用。</h1>
+
+        <div class="center-div">
+            <p class="section-subtitle">
+                任何人工智能代理、任何开发者、任何国家/地区——只要您拥有钱包和 USDC，<br>
+                即可立即访问所有付费 API。无需订阅，无最低消费，无需审批。永远如此。
+            </p>
         </div>
-    </div>
-
-    <main>
-        <!-- Hero 区域 -->
         
 
-        <!-- 可用API列表：你可支付什么 -->
-        <section class="py-16 border-y border-white/5 bg-black/30">
-            <div class="container-custom">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold">你能支付哪些费用？</h2>
-                    <p class="text-gray-400 mt-3 max-w-2xl mx-auto">真实API，真实数据，实价。每次调用都是一笔USDC微支付。</p>
+        <div class="stats">
+            10+ 提供商 · 200+ 终端 · AI 模型 + 加密货币 + 行业垂直模型 · 稳定币 USDC
+        </div>
+
+        <div class="btn-group">
+            <button class="btn primary-btn">浏览 API</button>
+            <button class="btn secondary-btn">工作原理</button>
+        </div>
+
+        <div class="advantages">
+            <div class="advantage-item">
+                <div class="advantage-number">一次请求</div>
+                <div class="advantage-desc">按需付费——Agent仅在调用时才需付费</div>
+            </div>
+            <div class="advantage-item">
+                <div class="advantage-number">零</div>
+                <div class="advantage-desc">障碍——无需钥匙、无需注册、无需账单</div>
+            </div>
+            <div class="advantage-item">
+                <div class="advantage-number">100%</div>
+                <div class="advantage-desc">链上支付和可验证支付</div>
+            </div>
+        </div>
+
+        <div class="code-demo">
+            <div class="code-card">
+                <div class="code-header">
+                    <div class="dot dot-red"></div>
+                    <div class="dot dot-yellow"></div>
+                    <div class="dot dot-green"></div>
+                    <div class="code-title">API 调用</div>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                    <div class="bg-white/5 rounded-2xl p-5 card-hover border border-white/10"><div class="text-xl mb-2">📈 获取行情价格</div><div class="text-blue-300 font-mono">$0.00001 / 次</div></div>
-                    <div class="bg-white/5 rounded-2xl p-5 card-hover border border-white/10"><div class="text-xl mb-2">📊 扫描市场异动</div><div class="text-blue-300 font-mono">$0.00002 / 次</div></div>
-                    <div class="bg-white/5 rounded-2xl p-5 card-hover border border-white/10"><div class="text-xl mb-2">🤖 AI交易信号</div><div class="text-blue-300 font-mono">$0.00001 / 次</div></div>
-                    <div class="bg-white/5 rounded-2xl p-5 card-hover border border-white/10"><div class="text-xl mb-2">💵 AGC内容生成</div><div class="text-blue-300 font-mono">$0.00003 / 次</div></div>
-                    <div class="bg-white/5 rounded-2xl p-5 card-hover border border-white/10"><div class="text-xl mb-2">⛓️ 高性价比TOKEN</div><div class="text-blue-300 font-mono">$0.00001 / 次</div></div>
-                    <div class="bg-white/5 rounded-2xl p-5 card-hover border border-white/10"><div class="text-xl mb-2">📉 行业垂直模型</div><div class="text-blue-300 font-mono">$0.00003 / 次</div></div>
+                <div class="code-content">
+                    #无需 API 密钥 - 直接使用 USDC 支付<br>
+                    $ curl <span class="code-path">https://machpay.ai/api/v1/coinank/netflow</span>
                 </div>
             </div>
-        </section>
 
-        <!-- 工作原理 -->
-        <section class="py-20">
-            <div class="container-custom">
-                <div class="text-center max-w-2xl mx-auto mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold">工作原理</h2>
-                    <p class="text-gray-400 mt-3">无需订阅，无需账单。钱包 + USDC = 即刻访问所有付费API。</p>
+            <div class="code-card">
+                <div class="code-header">
+                    <div class="dot dot-red"></div>
+                    <div class="dot dot-yellow"></div>
+                    <div class="dot dot-green"></div>
+                    <div class="code-title">ClawMachPay</div>
                 </div>
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div class="text-center p-6 rounded-2xl bg-white/5 border border-white/10"><div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-2xl mx-auto mb-4">01</div><h3 class="text-xl font-semibold">1. 挑选API</h3><p class="text-gray-400 text-sm mt-2">跨多家提供商的专业加密与AI数据API，无需审批、无等候名单、无账户要求。</p></div>
-                    <div class="text-center p-6 rounded-2xl bg-white/5 border border-white/10"><div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-2xl mx-auto mb-4">02</div><h3 class="text-xl font-semibold">2. 支付 $0.00001/次</h3><p class="text-gray-400 text-sm mt-2">签署一次EIP-3009授权，从钱包扣除$0.00001 USDC。无API密钥、无订阅、无发票。</p></div>
-                    <div class="text-center p-6 rounded-2xl bg-white/5 border border-white/10"><div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-2xl mx-auto mb-4">03</div><h3 class="text-xl font-semibold">3. 数据即时返回</h3><p class="text-gray-400 text-sm mt-2">毫秒级响应，按量付费。无最低消费，无合约限制，没有固定账单周期。</p></div>
-                </div>
-                <div class="mt-10 text-center text-gray-400 text-sm">💡 在浏览器中试用，集成 x402 SDK，或让 AI 智能体通过 OpenMachPay 技能自主调用 API。</div>
-            </div>
-        </section>
-
-        <!-- 现场演示 (互动Demo) -->
-        <!-- <section class="py-12 border-y border-white/5 bg-black/40">
-            <div class="container-custom">
-                <div class="flex flex-col md:flex-row gap-8 items-center">
-                    <div class="flex-1">
-                        <h2 class="text-2xl md:text-3xl font-bold">亲眼见证</h2>
-                        <p class="text-gray-300 mt-2">观看真实的 x402 支付流程 —— 从请求到数据返回仅需毫秒。</p>
-                        <div class="mt-4 bg-black/50 rounded-2xl p-4 border border-white/10 inline-block">
-                            <div class="flex items-center gap-3">
-                                <div id="demoStatus" class="text-sm text-gray-300">点击「运行演示」模拟 x402 支付流程</div>
-                                <button id="runDemoBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-1.5 rounded-lg text-sm transition">▶ 运行演示</button>
-                            </div>
-                            <div id="demoResult" class="mt-3 text-xs font-mono text-green-400"></div>
-                        </div>
-                        <p class="text-gray-500 text-xs mt-3">此模拟真实的 x402 流程。实际使用时可在上方 API 目录中试用。</p>
-                    </div>
-                    <div class="flex-1 bg-gradient-to-r from-blue-900/20 to-indigo-900/20 rounded-2xl p-6 border border-white/10 text-center">
-                        <span class="text-4xl block mb-2">⚡ 实时支付</span>
-                        <div class="text-sm text-gray-300">Base链 USDC 结算 · 零 gas 费用</div>
-                    </div>
+                <div class="code-content">
+                    $ openClaw 🔥 ClawMachPay 已准备就绪。钱包: <span class="code-wallet">0xAb....</span>.
                 </div>
             </div>
-        </section> -->
+        </div>
+    </section>
 
-        <!-- 定价与透明 -->
-        <section class="py-16">
-            <div class="container-custom">
-                <div class="text-center max-w-3xl mx-auto">
-                    <h2 class="text-3xl md:text-4xl font-bold">简单透明的定价</h2>
-                    <p class="text-gray-400 mt-2">仅按需付费，无订阅，无隐藏费用。</p>
+    <!-- 可支付费用模块 -->
+    <section class="payment-features">
+        <h2 class="section-main-title">你能支付哪些费用？</h2>
+        <div class="center-div">
+            <p class="section-subtitle">真实的API、真实的数据、真实的价格。每次调用都相当于一笔USDC微支付。</p>
+        </div>
+        
+        <div class="payment-grid">
+            <!-- 第一行第一个卡片 -->
+            <div class="payment-card">
+                <div class="payment-icon icon-bitcoin">₿</div>
+                <div class="payment-title">获取加密货币数据</div>
+                <div class="payment-price">0.00001美元<span class="payment-unit">/ 次</span></div>
+            </div>
+            
+            <!-- 第一行第二个卡片 -->
+            <div class="payment-card">
+                <div class="payment-icon icon-market">📈</div>
+                <div class="payment-title">扫描市场异动</div>
+                <div class="payment-price">0.00002美元<span class="payment-unit">/ 次</span></div>
+            </div>
+            
+            <!-- 第一行第三个卡片 -->
+            <div class="payment-card">
+                <div class="payment-icon icon-ai">🤖</div>
+                <div class="payment-title">AI交易信号</div>
+                <div class="payment-price">0.00001美元<span class="payment-unit">/ 次</span></div>
+            </div>
+            
+            <!-- 第二行第一个卡片 -->
+            <div class="payment-card">
+                <div class="payment-icon icon-stock">📊</div>
+                <div class="payment-title">AGC内容生成</div>
+                <div class="payment-price">0.00001美元<span class="payment-unit">/ 次</span></div>
+            </div>
+            
+            <!-- 第二行第二个卡片 -->
+            <div class="payment-card">
+                <div class="payment-icon icon-rate">📉</div>
+                <div class="payment-title">高性价比TOKEN</div>
+                <div class="payment-price">0.00001美元<span class="payment-unit">/ 次</span></div>
+            </div>
+            
+            <!-- 第二行第三个卡片 -->
+            <div class="payment-card">
+                <div class="payment-icon icon-option">⚡</div>
+                <div class="payment-title">行业垂直模型</div>
+                <div class="payment-price">0.00003美元<span class="payment-unit">/ 次</span></div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- 第二部分：工作原理模块 -->
+    <section class="working-principle">
+        <h2 class="section-main-title">工作原理</h2>
+        <div class="center-div">
+            <p class="section-subtitle">无需账户。无需 API 密钥。无需计费。钱包 + USDC = 即刻访问所有付费 API。</p>
+        </div>
+        
+        <div class="principle-steps">
+            <div class="step-item">
+                <div class="step-icon step-icon-1">
+                    <svg viewBox="0 0 34 34" fill="#0066ff">
+                        <path d="M10 10C10 8.89543 10.8954 8 12 8H28C29.1046 8 30 8.89543 30 10V14H32C32.5523 14 33 14.4477 33 15V28C33 28.5523 32.5523 29 32 29H8C7.44772 29 7 28.5523 7 28V15C7 14.4477 7.44772 14 8 14H10V10ZM12 10V14H28V10H12ZM9 16V27H31V16H9ZM14 4H26C26.5523 4 27 4.44772 27 5V7H13V5C13 4.44772 13.4477 4 14 4ZM15 7H25V9H15V7Z" fill="#ffffff"/>
+                    </svg>
                 </div>
-                <div class="grid md:grid-cols-4 gap-6 mt-12 text-center">
-                    <div class="bg-white/5 p-5 rounded-xl"><span class="text-3xl block">💰</span><div class="font-semibold mt-2">按次付费</div><div class="text-xs text-gray-400">每次调用固定USDC价格</div></div>
-                    <div class="bg-white/5 p-5 rounded-xl"><span class="text-3xl block">🔓</span><div class="font-semibold mt-2">便捷接入</div><div class="text-xs text-gray-400">仅需钱包地址和USDC即可立即调用</div></div>
-                    <div class="bg-white/5 p-5 rounded-xl"><span class="text-3xl block">⛓️</span><div class="font-semibold mt-2">链上结算</div><div class="text-xs text-gray-400">所有支付均为Base链USDC，透明可验证</div></div>
-                    <div class="bg-white/5 p-5 rounded-xl"><span class="text-3xl block">🌍</span><div class="font-semibold mt-2">全球访问</div><div class="text-xs text-gray-400">任意钱包均可使用，无地域限制</div></div>
+                <h3 class="step-title">1. 选择一个 API</h3>
+                <p class="step-desc">提供跨多个供应商的专业加密货币和人工智能数据 API。任何代理商或开发者均可访问——无需审批、无需排队、无需注册账户。</p>
+            </div>
+
+            <div class="step-item">
+                <div class="step-icon step-icon-2">
+                    <svg viewBox="0 0 36 36" fill="#9900ff">
+                        <path d="M10 10C10 8.89543 10.8954 8 12 8H28C29.1046 8 30 8.89543 30 10V28C30 29.1046 29.1046 30 28 30H12C10.8954 30 10 29.1046 10 28V10ZM12 10V14H28V10H12ZM12 16V28H28V16H12ZM29 18C29 16.8954 29.8954 16 31 16C32.1046 16 33 16.8954 33 18V20C33 21.1046 32.1046 22 31 22C29.8954 22 29 21.1046 29 20V18Z" fill="#0066ff"/>
+                    </svg>
                 </div>
-                <div class="mt-12 bg-white/5 rounded-2xl p-6 border border-white/10 max-w-md mx-auto text-center">
-                    <div class="text-gray-300 text-sm">费用示例</div>
-                    <div class="text-2xl font-bold text-white">1,000,000 次 API 调用</div>
-                    <div class="text-blue-300 text-xl">$10 USDC</div>
-                    <div class="text-xs text-gray-400 mt-1">1,000,000 × $0.00001 = $10 USDC</div>
-                    <div class="mt-2 text-green-400 text-xs">零Gas费 · 零交易费用</div>
+                <h3 class="step-title">2. 每次调用支付 0.0001 美元</h3>
+                <p class="step-desc">签署一份 EIP-3009 授权书，您的钱包将扣除 0.0001 美元 USDC。就这么简单——无需 API 密钥、订阅或发票。</p>
+            </div>
+
+            <div class="step-item">
+                <div class="step-icon step-icon-3">
+                    <svg viewBox="0 0 34 34" fill="#00cc99">
+                        <path d="M12 28L20 12L14 12L16 6L28 22L22 22L20 28L12 28ZM12 24L20 8L14 8L16 2L28 18L22 18L20 24L12 24Z" fill="#00ff9d"/>
+                    </svg>
+                </div>
+                <h3 class="step-title">3. 数据即时响应</h3>
+                <p class="step-desc">毫秒级响应，按需付费，无最低消费，无合约限制，没有固定账单周期。</p>
+            </div>
+        </div>
+
+        <p class="principle-note">尝试在浏览器中使用，通过 x402 SDK 集成，或者让 AI 代理使用 OpenClaw 技能自主调用 API。</p>
+    </section>
+
+    <!-- 第三部分：演示 + 定价模块 -->
+    <!-- <section class="demo-section">
+        <h2 class="section-main-title">观看实际演示</h2>
+        <div class="center-div">
+        <p class="section-subtitle">观看真实的 x402 支付流程——从请求到数据，仅需几秒。</p>
+        </div>
+        <div class="demo-card">
+            <div class="demo-header">
+                <div style="display: flex; align-items: center;">
+                    <div class="demo-dots">
+                        <div class="demo-dot dot-red"></div>
+                        <div class="demo-dot dot-yellow"></div>
+                        <div class="demo-dot dot-green"></div>
+                    </div>
+                    <span class="demo-title">现场演示</span>
+                </div>
+                <button class="demo-btn">运行演示</button>
+            </div>
+            <div class="demo-content">
+                ← 点击“运行演示”查看 x402 支付流程
+            </div>
+            <p class="demo-note">这模拟了一个真实的 x402 流。您可以在上面的 API 目录中进行实际测试。</p>
+        </div>
+    </section> -->
+
+    <section class="pricing-section">
+        <h2 class="section-main-title">简单透明的定价</h2>
+        <div class="center-div">
+            <p class="section-subtitle">按需付费，无需订阅，无最低消费，无隐藏费用。</p>
+        </div>
+        <div class="pricing-cards">
+            <div class="pricing-card">
+                <div class="pricing-icon">💰</div>
+                <h3 class="pricing-title">按次付费通话</h3>
+                <p class="pricing-desc">每次 API 调用都有固定的 USDC 价格，绝无意外。</p>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-icon">🔓</div>
+                <h3 class="pricing-title">无需KYC</h3>
+                <p class="pricing-desc">无需KYC认证。就是一个钱包。</p>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-icon">⚖️</div>
+                <h3 class="pricing-title">链上结算</h3>
+                <p class="pricing-desc">所有款项均以USDC支付，透明且可验证。</p>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-icon">🌐</div>
+                <h3 class="pricing-title">全球访问</h3>
+                <p class="pricing-desc">任何拥有钱包的人都可以使用这些API，没有地域限制。</p>
+            </div>
+        </div>
+
+        <div class="cost-example">
+            <p class="example-label">示例成本</p>
+            <p class="example-text">对 coinank/netflow 的 API 调用次数达 1,000,000 次</p>
+            <div class="example-cost">10 美元</div>
+            <p class="example-calc">1,000,000 × 0.0001 美元 = 10 USDC</p>
+            <p class="example-fee">零Gas费 · 零交易费</p>
+        </div>
+    </section>
+
+    <!-- 第四部分：零摩擦 + SDK集成模块 -->
+    <section class="zero-friction">
+        <h2 class="section-main-title">钱包地址 + 稳定币USDC。仅此而已。</h2>
+        <div class="center-div">
+            <p class="section-subtitle">无需设置计费。全球任何代理商或开发者现在即可开始调用付费API。</p>
+        </div>
+        <h3 class="friction-title">零磨损——以下是实现零磨损的要素</h3>
+        
+        <div class="friction-cards">
+            <div class="friction-card card-1">
+                <div class="card-icon">♾️</div>
+                <h4 class="card-title">任何 EVM 钱包地址</h4>
+                <p class="card-desc">只需一个EVM私钥——几秒钟即可生成。代理商无需安装钱包应用。无需创建账户、无需KYC验证、无需审批。代理商只需使用密钥即可通过编程方式调用API。</p>
+            </div>
+
+            <div class="friction-card card-2">
+                <div class="card-icon">💵</div>
+                <h4 class="card-title">稳定币USDC</h4>
+                <p class="card-desc">只为使用量付费。没有月租费，没有最低消费，没有合约限制。所有支付均在链上进行，可验证。</p>
+                <a href="#" class="card-link">获取 USDC 测试 →</a>
+            </div>
+
+            <div class="friction-card card-3">
+                <div class="card-icon">🔐</div>
+                <h4 class="card-title">专用支付钱包</h4>
+                <p class="card-desc">最佳实践：使用独立的钱包专门用于 API 支付。确保主要资产完全隔离。代理程序可自主运行，规模不限——架构简洁，完全可控。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="sdk-section">
+        <h2 class="section-main-title">SDK 和集成</h2>
+        <div class="center-div">
+            <p class="section-subtitle">选择您的语言。所有 SDK 都会自动处理 x402 支付。</p>
+        </div>
+        
+        <div class="sdk-tabs">
+            <div class="tab-item tab-active">TypeScript</div>
+            <div class="tab-item tab-inactive">Python</div>
+            <div class="tab-item tab-inactive">Go</div>
+            <div class="tab-item tab-inactive">🤖AI代理</div>
+            <div class="tab-item tab-inactive">🦞OpenClaw</div>
+        </div>
+
+        <div class="code-block code-install">
+            $ npm install machpay/machpay-js
+        </div>
+
+        <div class="code-block">
+            <span class="token-keyword">import { Claw402 } from "claw402"</span><br><br>
+            <span class="token-comment">// 创建类型化客户端 -自动处理 x402付款</span><br>
+            <span class="token-keyword">const client = new Claw402 ({</span><br>
+            &nbsp;&nbsp;privateKey: process.env.WALLET_PRIVATE_KEY as <span class="token-string">`0x${string}`</span>,<br>
+            <span class="token-keyword">})</span><br><br>
+            <span class="token-comment">// 加密基金流 - $ <span class="token-number">0.0001</span> /call（手动输入，支持自动完成）</span><br>
+            <span class="token-keyword">const flow = await client.coinank.fund.realtime({</span><br>
+            &nbsp;&nbsp;productType: <span class="token-string">"SWAP"</span>,<br>
+            <span class="token-keyword">})</span><br><br>
+            <span class="token-comment">// AI 交易信号 - $ <span class="token-number">0.0001</span> /cal</span><br>
+            <span class="token-keyword">const signals = await client.nofxos.netflow.topRanking({</span><br>
+            &nbsp;&nbsp;限制: <span class="token-number">20</span>,<br>
+            <span class="token-keyword">})</span><br><br>
+            <span class="token-comment">// ETF 数据、巨鲸追踪、清算以及90多个其他端点</span><br>
+            <span class="token-keyword">const etf = await client.coinank.etf.usBtcInflow()</span><br>
+            <span class="token-keyword">const whales = await client.coinank.hyper.topPosition()</span><br><br>
+            <span class="token-console">console.log (flow, signals, etf, whales)</span>
+        </div>
+
+        <div class="security-card">
+            <span class="security-tag">🔐 安全最佳实践</span>
+            使用专用的钱包专门用于 API 支付——与您的主要资产完全隔离。将该密钥传递给 SDK，清晰的隔离、完全的控制、企业级的安全模式。
+        </div>
+    </section>
+
+    <!-- 第五部分：OpenClaw402模块 -->
+    <section class="openclaw-section">
+
+        <h1 class="main-heading">ClawMachPay</h1>
+        <div class="center-div">
+            <p class="section-subtitle">由 MachPay 提供技术支持的个人 AI 助手——使用 USDC 付款，无需 API 密钥，安装即可使用。</p>
+        </div>
+        <div class="system-tags">
+            <span>●</span>macOS / <span>●</span>Linux （Windows 版本即将推出）
+        </div>
+
+        <div class="install-command">
+            <div class="command-text">curl -fsSL https://machpay.ai/install.sh | bash</div>
+            <button class="copy-btn">复制</button>
+        </div>
+
+        <h2 class="section-main-title" style="font-size: 1.5rem;">如何安装</h2>
+        <div class="install-steps">
+            <div class="install-step-card">
+                <div class="card-icon">📦</div>
+                <div class="step-number">步骤1</div>
+                <div class="step-title">运行安装命令</div>
+            </div>
+
+            <div class="install-step-card">
+                <div class="card-icon">🔐</div>
+                <div class="step-number">步骤2</div>
+                <div class="step-title">钱包自动生成</div>
+            </div>
+
+            <div class="install-step-card">
+                <div class="card-icon">💰</div>
+                <div class="step-number">步骤3</div>
+                <div class="step-title">扫描二维码为USDC提供资金</div>
+            </div>
+
+            <div class="install-step-card">
+                <div class="card-icon">💬</div>
+                <div class="step-number">第四步</div>
+                <div class="step-title">开始聊天，按次付费</div>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3 class="feature-title">20多个聊天平台</h3>
+                <p class="feature-desc">在您已使用的平台上与人工智能聊天</p>
+                <div class="platform-tags">
+                    <div class="platform-tag">电报</div>
+                    <div class="platform-tag">WhatsApp</div>
+                    <div class="platform-tag">Discord</div>
+                    <div class="platform-tag">松弛</div>
+                    <div class="platform-tag">信号</div>
+                    <div class="platform-tag">iMessage</div>
+                    <div class="platform-tag">微信</div>
+                    <div class="platform-tag">IRC</div>
+                    <div class="platform-tag">矩阵</div>
+                    <div class="platform-tag">Google聊天</div>
+                    <div class="platform-tag">+10</div>
                 </div>
             </div>
-        </section>
 
-        <!-- 最低要求：EVM地址+USDC -->
-        <section class="py-16 bg-gradient-to-b from-transparent to-blue-950/10">
-            <div class="container-custom text-center">
-                <h2 class="text-3xl font-bold">一个EVM地址 + USDC —— 仅此而已</h2>
-                <p class="text-gray-300 max-w-2xl mx-auto mt-3">无需注册，无API密钥，无需账单设置。全球任何智能体或开发者都可以立即开始调用付费API。</p>
-                <div class="grid md:grid-cols-3 gap-6 mt-10 text-left">
-                    <div class="bg-black/40 p-5 rounded-2xl border-l-4 border-blue-500"><div class="text-xl">🔗 任意EVM地址</div><p class="text-sm text-gray-300 mt-1">只需EVM私钥——几秒生成。智能体无需钱包应用，无需KYC，无需审批。程序化调用API。</p></div>
-                    <div class="bg-black/40 p-5 rounded-2xl border-l-4 border-blue-500"><div class="text-xl">💵 Base链 USDC</div><p class="text-sm text-gray-300 mt-1">按量付费，无月账单，无最低消费。每笔支付链上可查。<br><a href="#" class="text-blue-400 text-xs">领取测试USDC →</a></p></div>
-                    <div class="bg-black/40 p-5 rounded-2xl border-l-4 border-blue-500"><div class="text-xl">🔐 专用支付钱包</div><p class="text-sm text-gray-300 mt-1">最佳实践：使用独立钱包支付API费用，主资产完全隔离。智能体以任何规模自主运行，架构清晰，完全可控。</p></div>
+            <div class="feature-card">
+                <h3 class="feature-title">22+个AI模型</h3>
+                <p class="feature-desc">一个钱包，即可访问所有顶级人工智能模型</p>
+                <ul class="model-list">
+                    <li class="model-item">
+                        <span class="model-name">OpenAI</span>
+                        <span class="model-desc">GPT-5.4, o3</span>
+                    </li>
+                    <li class="model-item">
+                        <span class="model-name">人类学</span>
+                        <span class="model-desc">克劳德·奥普斯, 十四行诗</span>
+                    </li>
+                    <li class="model-item">
+                        <span class="model-name">谷歌</span>
+                        <span class="model-desc">Gemini 3.1 Pro</span>
+                    </li>
+                    <li class="model-item">
+                        <span class="model-name">深潜</span>
+                        <span class="model-desc">聊天, 推理者</span>
+                    </li>
+                    <li class="model-item">
+                        <span class="model-name">奎文</span>
+                        <span class="model-desc">Max, Plus</span>
+                    </li>
+                    <li class="model-item">
+                        <span class="model-name">xAI</span>
+                        <span class="model-desc">Grok 3</span>
+                    </li>
+                    <li class="model-item">
+                        <span class="model-name">登月计划</span>
+                        <span class="model-desc">Kimi K2</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- <div class="demo-label">AI聊天演示</div>
+        <div class="chat-demo">
+            <div class="chat-query">
+                <div class="chat-query-label">你</div>
+                <div class="chat-query-text">现在HyperLiquid平台上最大的几头鲸鱼都在做什么？</div>
+            </div>
+
+            <div class="chat-response">
+                <div class="response-loading">正在查询 claw402 API... ($0.00002 USDC)</div>
+                <div class="response-content">
+                    顶级超流动性鲸鱼仓位：<br>
+                    1. 0x3f2a... 多头比特币 1240 万美元 盈亏：+180 万美元<br>
+                    2. 0x8b1c... 多头以太坊 820 万美元 盈亏：+42.3 万美元<br>
+                    3. 0xd4e7... 做空 SOL 510万美元 盈亏：-8.9万美元<br><br>
+                    鲸鱼情绪：67%做多，33%做空。看涨倾向。
                 </div>
             </div>
-        </section>
+        </div> -->
 
-        <!-- SDK & 集成 -->
-        <section class="py-16 border-t border-white/5">
-            <div class="container-custom">
-                <div class="text-center mb-8"><h2 class="text-3xl font-bold">SDK & 集成</h2><p class="text-gray-400">选择您的语言，所有SDK自动处理x402支付。</p></div>
-                <div class="bg-black/40 rounded-2xl border border-white/10 p-6 overflow-x-auto">
-                    <div class="text-sm text-gray-400 mb-2">安装</div>
-                    <pre class="bg-[#0b0b10] text-gray-200"><code>$ npm install MachPay/machpay-js</code></pre>
-                    <div class="text-sm text-gray-400 mt-4">使用</div>
-                    <pre class="bg-[#0b0b10] text-gray-200"><code>import { MachPay } from "machpay"
-
-// 创建客户端 —— 自动处理 x402 支付
-const client = new MachPay({
-  privateKey: process.env.WALLET_PRIVATE_KEY
-})
-
-// 加密资金流动 —— $0.00001/次
-const flow = await client.coinank.fund.realtime({
-  productType: "SWAP"
-})
-
-// AI交易信号 —— $0.00001/次
-const signals = await client.nofxos.netflow.topRanking({
-  limit: 20
-})
-
-console.log(flow, signals)</code></pre>
-                    <div class="mt-4 text-xs text-gray-400 border-t border-white/10 pt-3">🔐 安全最佳实践：使用专用钱包进行API支付，完全与主要资产隔离。</div>
-                </div>
+        <!-- <div class="wallet-section">
+            <div class="wallet-label">钱包管理</div>
+            <div class="wallet-commands">
+                <span class="wallet-command-text">$ openclaw wallet</span> <span class="wallet-comment">#查看地址 + 二维码</span><br>
+                <span class="wallet-command-text">$ openclaw wallet generate</span> <span class="wallet-comment">#生成新钱包</span><br>
+                <span class="wallet-command-text">$ openclaw wallet import <key></span> <span class="wallet-comment">#导入现有密钥</span>
             </div>
-        </section>
+        </div>
 
-        <!-- Hero 区域：基于claw402 个人AI助手 -->
-        <section class="pt-16 pb-10 md:pt-24 md:pb-16">
-            <div class="max-w-6xl mx-auto px-5 text-center">
-                <div class="inline-flex items-center gap-1 bg-white/5 rounded-full px-3 py-1 text-xs mb-5 border border-white/10">
-                    <span>🦞 基于 MachPay · x402 协议</span>
+        <div class="footer-note">
+            💰 钱包密钥存储在本地——从未上传。
+            <a href="#" class="footer-link">查看源代码→</a>
+        </div> -->
+    </section>
+    <!-- 页面底部 -->
+        <footer class="footer">
+            <div class="footer-container">
+                <!-- 品牌信息 -->
+                <div class="footer-brand">
+                    <div class="footer-logo">Mach<span>Pay</span></div>
+                    <p class="footer-desc">M2M支付网关</p>
                 </div>
-                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">
-                    <span class="gradient-text">OpenClawPay</span><br>
-                </h1>
-                <p class="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto mt-5">
-                    由 MachPay 提供技术支持的个人 AI 助手——使用 USDC 付款，无需 API 密钥，安装即可使用。
-                </p>
-                <div class="flex flex-wrap justify-center gap-3 mt-6 text-sm text-gray-400">
-                    <span>⚡ 零API密钥</span>
-                    <span>💸 按量支付 USDC</span>
-                    <span>🔐 本地钱包</span>
-                    <span>🤖 自主代理友好</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- 安装命令区块 (macOS/Linux) -->
-        <section id="install" class="pb-8">
-            <div class="max-w-4xl mx-auto px-5">
-                <div class="bg-gradient-to-br from-gray-900/60 to-black/70 rounded-2xl border border-white/10 p-6 md:p-8 backdrop-blur-sm">
-                    <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
-                        <div>
-                            <span class="text-xl font-semibold flex items-center gap-2">🍎 macOS / 🐧 Linux</span>
-                            <span class="text-xs text-gray-400 ml-1">Windows 版本即将推出</span>
-                        </div>
-                        <div class="text-xs bg-white/5 px-3 py-1 rounded-full">一键安装 · 开箱即用</div>
+                
+                <!-- 链接区域 -->
+                <div class="footer-links">
+                    <!-- Links 列 -->
+                    <div class="footer-column">
+                        <h3 class="column-title">链接</h3>
+                        <a href="#" class="footer-link">GitHub</a>
+                        <a href="#" class="footer-link">TypeScript SDK</a>
+                        <a href="#" class="footer-link">Python SDK</a>
+                        <a href="#" class="footer-link">Go SDK</a>
                     </div>
-                    <div class="relative mt-2">
-                        <pre id="installCommand" class="code-block text-gray-200 text-sm p-4 pr-16 overflow-x-auto rounded-xl whitespace-pre-wrap break-all">curl -fsSL https://machpay.ai/install.sh | bash</pre>
-                        <button id="copyBtn" class="absolute top-3 right-3 bg-gray-800 hover:bg-gray-700 text-xs px-3 py-1.5 rounded-lg transition flex items-center gap-1 border border-gray-700">
-                            📋 复制
-                        </button>
-                    </div>
-                    <p class="text-gray-400 text-xs mt-3 flex items-center gap-1">🔐 安装脚本自动验证签名，安全可靠。运行后自动生成钱包。</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 如何安装 四步骤 详细卡片 -->
-        <section class="py-12">
-            <div class="max-w-7xl mx-auto px-5">
-                <div class="text-center mb-10">
-                    <h2 class="text-3xl md:text-4xl font-bold">如何安装</h2>
-                    <p class="text-gray-400 mt-2">四个简单步骤 · 从零到AI助手</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- 步骤1 -->
-                    <div class="bg-white/5 rounded-2xl p-5 border border-white/10 hover:border-blue-500/50 transition-all text-center">
-                        <div class="w-12 h-12 mx-auto step-icon rounded-2xl flex items-center justify-center text-2xl mb-4">📦</div>
-                        <h3 class="text-xl font-bold">步骤 1</h3>
-                        <p class="text-gray-300 font-medium mt-1">运行安装命令</p>
-                        <p class="text-gray-400 text-sm mt-2">终端执行上方命令，自动下载 MachPay 二进制文件。</p>
-                    </div>
-                    <!-- 步骤2 -->
-                    <div class="bg-white/5 rounded-2xl p-5 border border-white/10 hover:border-blue-500/50 transition-all text-center">
-                        <div class="w-12 h-12 mx-auto step-icon rounded-2xl flex items-center justify-center text-2xl mb-4">🔐</div>
-                        <h3 class="text-xl font-bold">步骤 2</h3>
-                        <p class="text-gray-300 font-medium mt-1">钱包自动生成</p>
-                        <p class="text-gray-400 text-sm mt-2">首次运行自动创建 EVM 钱包，私钥加密存储在本地 ~/.openclaw/。</p>
-                    </div>
-                    <!-- 步骤3 模拟二维码充值 -->
-                    <div class="bg-white/5 rounded-2xl p-5 border border-white/10 hover:border-blue-500/50 transition-all text-center">
-                        <div class="w-12 h-12 mx-auto step-icon rounded-2xl flex items-center justify-center text-2xl mb-4">💰</div>
-                        <h3 class="text-xl font-bold">步骤 3</h3>
-                        <p class="text-gray-300 font-medium mt-1">充值 USDC (Base)</p>
-                        <p class="text-gray-400 text-sm mt-2">扫描二维码或复制地址，向钱包转入 Base 链 USDC。</p>
-                        <!-- 模拟二维码区域 -->
-                        <!-- <div class="mt-3 flex justify-center">
-                            <div class="qr-sim w-24 h-24 rounded-xl flex items-center justify-center border border-white/20 bg-black/40">
-                                <div class="text-center">
-                                    <span class="text-2xl">📱</span>
-                                    <div class="text-[8px] text-gray-400 mt-1">演示码</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-2 text-[11px] font-mono bg-black/40 rounded-full px-2 py-1 inline-block text-blue-300">0x29B0...8ae3</div> -->
-                    </div>
-                    <!-- 步骤4 -->
-                    <div class="bg-white/5 rounded-2xl p-5 border border-white/10 hover:border-blue-500/50 transition-all text-center">
-                        <div class="w-12 h-12 mx-auto step-icon rounded-2xl flex items-center justify-center text-2xl mb-4">🤖</div>
-                        <h3 class="text-xl font-bold">步骤 4</h3>
-                        <p class="text-gray-300 font-medium mt-1">开始聊天 · 按次付费</p>
-                        <p class="text-gray-400 text-sm mt-2">对话或调用 API，每次调用仅扣除 $0.00001 USDC，实时透明。</p>
-                        <div class="mt-3 text-xs text-green-400 bg-green-950/30 rounded-full inline-block px-3 py-1">已连接 22+ AI 模型</div>
+                    
+                    <!-- Resources 列 -->
+                    <div class="footer-column">
+                        <h3 class="column-title">资源</h3>
+                        <a href="#" class="footer-link">开发者文档</a>
+                        <a href="#" class="footer-link">USDC Faucet</a>
+                        <a href="#" class="footer-link">联系我们</a>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <!-- 20+ 聊天平台 & 22+ AI模型双栏展示 -->
-        <section id="platforms" class="py-16 border-y border-white/5 bg-black/30">
-            <div class="max-w-7xl mx-auto px-5">
-                <div class="grid lg:grid-cols-2 gap-12">
-                    <!-- 聊天平台区域 -->
-                    <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
-                        <div class="flex items-center gap-2 text-3xl mb-3">💬</div>
-                        <h3 class="text-2xl font-bold">20+ 聊天平台</h3>
-                        <p class="text-gray-400 text-sm mb-5">在您已使用的平台上与 AI 助手对话</p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">Telegram</span>
-                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">WhatsApp</span>
-                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">Discord</span>
-                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">Slack</span>
-                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">Signal</span>
-                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">iMessage</span>
-                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">WeChat</span>
-                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">IRC</span>
-                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">Matrix</span>
-                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm">Google Chat</span>
-                            <span class="bg-gray-800/60 px-3 py-1.5 rounded-full text-sm border border-dashed border-gray-500">+10 更多</span>
-                        </div>
-                        <div class="mt-5 text-xs text-gray-400">支持群聊/私聊 · 插件化集成</div>
-                    </div>
-
-                    <!-- AI 模型区域 -->
-                    <div id="models" class="bg-white/5 rounded-2xl p-6 border border-white/10">
-                        <div class="flex items-center gap-2 text-3xl mb-3">🧠</div>
-                        <h3 class="text-2xl font-bold">22+ AI 模型</h3>
-                        <p class="text-gray-400 text-sm mb-5">一个钱包，即可访问所有顶级人工智能模型</p>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">OpenAI</span><div class="text-xs text-gray-300">GPT-5.4, o3</div></div>
-                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">Anthropic</span><div class="text-xs text-gray-300">Claude Opus, Sonnet</div></div>
-                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">Google</span><div class="text-xs text-gray-300">Gemini 3.1 Pro</div></div>
-                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">DeepSeek</span><div class="text-xs text-gray-300">Chat, Reasoner</div></div>
-                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">Qwen</span><div class="text-xs text-gray-300">Max, Plus</div></div>
-                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">xAI</span><div class="text-xs text-gray-300">Grok 3</div></div>
-                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">Moonshot</span><div class="text-xs text-gray-300">Kimi K2</div></div>
-                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">Mistral</span><div class="text-xs text-gray-300">Large, Small</div></div>
-                            <div class="border-l-2 border-blue-500 pl-2"><span class="font-semibold">Cohere</span><div class="text-xs text-gray-300">Command-R+</div></div>
-                        </div>
-                        <div class="mt-4 text-xs text-gray-400 flex items-center gap-1">✨ 更多模型持续集成，按次调用，无需订阅</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 钱包管理和 AI 聊天演示 (像真实助手交互) -->
-        <section class="py-16">
-            <div class="max-w-6xl mx-auto px-5">
-                <div class="bg-black/40 rounded-2xl border border-white/10 p-6 md:p-8">
-                    <div class="flex flex-wrap md:flex-nowrap gap-8">
-                        <!-- 左侧钱包命令示例 -->
-                        <div class="flex-1">
-                            <h3 class="text-xl font-bold flex items-center gap-2">🔐 钱包管理</h3>
-                            <pre class="code-block text-gray-300 text-xs sm:text-sm p-3 mt-3 overflow-x-auto">$ openclaw wallet            # 查看地址 + QR码
-$ openclaw wallet generate   # 生成新钱包
-$ openclaw wallet import &lt;key&gt; # 导入现有私钥</pre>
-                            <p class="text-gray-400 text-xs mt-2">🔒 钱包密钥本地存储，永不离开设备。完全自主托管。</p>
-                            <div class="mt-4 flex gap-2 flex-wrap">
-                                <div class="bg-blue-950/40 rounded-xl px-3 py-2 text-xs flex items-center gap-1"><span>💰 余额: 12.43 USDC</span><span class="text-green-400">(演示)</span></div>
-                                <div class="bg-gray-800/40 rounded-xl px-3 py-2 text-xs">⛓️ Base 链 · 零gas抽象</div>
-                            </div>
-                        </div>
-                        <!-- 右侧 AI 聊天模拟对话 -->
-                        <div class="flex-1 border-l border-white/10 pl-6 md:pl-8">
-                            <h3 class="text-xl font-bold flex items-center gap-2">💬 AI 聊天演示</h3>
-                            <div class="mt-3 space-y-3">
-                                <div class="bg-gray-900/60 rounded-xl p-3">
-                                    <div class="text-blue-300 text-sm">You</div>
-                                    <div class="text-gray-200 text-sm">HyperLiquid 上最大的鲸鱼头寸是什么？</div>
-                                </div>
-                                <div class="bg-gray-800/40 rounded-xl p-3 border-l-2 border-blue-400">
-                                    <div class="text-blue-300 text-sm flex items-center gap-1">🦞 OpenClaw402 <span class="text-gray-500 text-[10px]">($0.00002 USDC)</span></div>
-                                    <div class="text-gray-200 text-sm whitespace-pre-wrap">📊 实时链上数据：<br>1. 0x3f2a… 多头 BTC $12.4M (+18% PnL)<br>2. 0x8b1c… 多头 ETH $8.2M (+5.2%)<br>3. 0xd4e7… 空头 SOL $5.1M (-3.1%)<br>鲸鱼情绪 68% 看多 → 偏多信号。</div>
-                                </div>
-                                <div class="text-right text-[10px] text-gray-500">按次付费 · 实时结算</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 页脚 -->
-        <footer class="border-t border-white/10 py-10 text-center text-gray-500 text-sm">
-            <div class="container-custom">
-                <div class="flex flex-wrap justify-center gap-6 mb-4">
-                    <span>© 2025 MachPay</span>
-                    <a href="#" class="hover:text-blue-400">条款</a>
-                    <a href="#" class="hover:text-blue-400">隐私</a>
-                    <a href="#" class="hover:text-blue-400">状态</a>
-                    <a href="#" class="hover:text-blue-400">GitHub</a>
-                </div>
-                <p>x402 协议兼容 · 基于 Base 链构建 · 无摩擦Agent经济</p>
+            
+            <!-- 底部版权信息 -->
+            <div class="footer-bottom">
+                <div class="footer-copyright">© 2026 MachPay. All rights reserved.</div>
+                <div class="footer-network">Network: Base · Asset: USDC</div>
             </div>
         </footer>
-    </main>
-
-    <!-- 演示交互脚本 -->
-    <script>
-        const runBtn = document.getElementById('runDemoBtn');
-        const demoResult = document.getElementById('demoResult');
-        const demoStatus = document.getElementById('demoStatus');
-        if(runBtn) {
-            runBtn.addEventListener('click', () => {
-                demoStatus.innerText = '⚡ 正在模拟支付流程...';
-                demoResult.innerText = '';
-                setTimeout(() => {
-                    demoStatus.innerText = '✅ 支付成功! 模拟 x402 支付: 扣除 $0.00001 USDC';
-                    demoResult.innerText = '✨ 响应数据: { "btc_price": 94200, "change": "+3.2%", "funding": "0.0021%" }';
-                    setTimeout(() => {
-                        demoStatus.innerText = '点击「运行演示」模拟 x402 支付流程';
-                    }, 4000);
-                }, 800);
-            });
-        }
-    </script>
-    <!-- 添加 Tailwind 用于辅助样式 (快速网格布局，避免手写太多) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* 覆盖 tailwind 部分默认背景 */
-        body { background: #010101; }
-        .bg-black\/40, .bg-black\/30, .bg-black\/50 { background-color: rgba(0,0,0,0.4); }
-        .border-white\/10 { border-color: rgba(255,255,255,0.1); }
-        .bg-white\/5 { background-color: rgba(255,255,255,0.05); }
-        .bg-white\/10 { background-color: rgba(255,255,255,0.1); }
-    </style>
 </body>
 </html>
