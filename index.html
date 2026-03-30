@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>MachPay - 按需支付API，使用USDC</title>
+    <!-- 引入 Google Fonts 字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <!-- 基础样式重置与主题变量 -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #010101;
+            font-family: 'Inter', sans-serif;
+            color: #eef2ff;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2d3748;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a5568;
+        }
+
+        /* 渐变文字工具类 */
+        .gradient-text {
+            background: linear-gradient(135deg, #FFFFFF 0%, #A0AEC0 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .accent-glow {
+            background: linear-gradient(115deg, #2775ca 0%, #00a6ff 100%);
+        }
+
+        .card-hover {
+            transition: all 0.25s ease;
+            border: 1px solid rgba(55, 65, 81, 0.3);
+        }
+        .card-hover:hover {
+            border-color: #2775ca;
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
+        }
+
+        /* 代码块样式 */
+        pre {
+            background: #0f0f12;
+            border-radius: 1rem;
+            padding: 1.25rem;
+            overflow-x: auto;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.85rem;
+            border: 1px solid #262626;
+        }
+        code {
+            font-family: 'SF Mono', monospace;
+            background: #1a1a1f;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        /* 按钮 */
+        .btn-primary {
+            background: #2775ca;
+            border: none;
+            transition: 0.2s;
+        }
+        .btn-primary:hover {
+            background: #1b5ba8;
+            transform: scale(0.98);
+            box-shadow: 0 0 12px rgba(39, 117, 202, 0.4);
+        }
+        .btn-outline {
+            border: 1px solid #3b4c5e;
+            background: transparent;
+        }
+        .btn-outline:hover {
+            border-color: #2775ca;
+            background: rgba(39, 117, 202, 0.1);
+        }
+
+        /* 布局 */
+        .container-custom {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        @media (max-width: 768px) {
+            .container-custom {
+                padding: 0 1.2rem;
+            }
+        }
+
+        /* 玻璃效果 */
+        .glass-panel {
+            background: rgba(10, 10, 15, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <nav class="glass-panel sticky top-0 z-50 border-b border-white/5" style="background: rgba(1,1,1,0.85); backdrop-filter: blur(12px);">
+        <div class="container-custom flex items-center justify-between py-4 flex-wrap gap-4">
+            <!-- LOGO 改为 MachPay -->
+            <div class="flex items-center gap-2">
+                <span class="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">MachPay</span>
+                <span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full border border-blue-500/30">α</span>
+            </div>
+            <div class="flex items-center gap-6 text-sm font-medium">
+                <a href="#" class="hover:text-blue-400 transition">目录</a>
+                <a href="#" class="hover:text-blue-400 transition">定价</a>
+                <a href="#" class="hover:text-blue-400 transition">SDK</a>
+                <button class="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-sm hover:bg-white/10 transition">控制台</button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero 区域 -->
+        <section class="pt-20 pb-16 md:pt-28 md:pb-24">
+            <div class="container-custom text-center">
+                <div class="inline-flex items-center gap-1 bg-white/5 rounded-full px-3 py-1 text-xs mb-6 border border-white/10">
+                    <span>⚡ Powered by x402 协议 · Base 链</span>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight">
+                    为任意 API 付费<br>
+                    使用 <span class="gradient-text">USDC</span>
+                </h1>
+                <p class="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto mt-6">
+                    任何 AI 智能体、任何开发者、任何国家 —— 只要拥有钱包和 USDC，即刻访问所有付费 API。<br>
+                    无需注册，无需 API 密钥，无账单周期，无需审批。
+                </p>
+                <div class="flex flex-wrap justify-center gap-3 mt-8 text-sm text-gray-400">
+                    <span>🔹 20+ AI服务提供商</span>
+                    <span>🔹 200+ API</span>
+                    <span>🔹 AI模型 + 加密数据 + 美股</span>
+                    <span>🔹 稳定币 USDC</span>
+                </div>
+                <div class="mt-12 flex flex-wrap justify-center gap-4">
+                    <button class="btn-primary text-white font-semibold px-8 py-3 rounded-xl shadow-lg">开始使用 →</button>
+                    <button class="btn-outline px-8 py-3 rounded-xl text-gray-200 font-medium">查看文档</button>
+                </div>
+                <!-- 代码演示卡片 -->
+                <div class="mt-16 max-w-2xl mx-auto text-left bg-black/40 rounded-2xl border border-white/10 p-5">
+                    <div class="text-xs text-gray-400 mb-2">API 调用 · 无API密钥 — 仅用USDC支付</div>
+                    <pre class="bg-[#0a0a0f] text-gray-200 text-sm"><code>$ curl https://machpay.ai/api/v1/coinank/netflow
+# 402 → 自动支付 $0.00001 USDC → 数据 ✨</code></pre>
+                    <div class="mt-4 flex items-center gap-2 text-sm text-blue-300">
+                        <span>🦞 OpenMachPay</span>
+                        <span class="text-gray-500">$ openclaw</span>
+                        <span class="text-gray-400 text-xs">🦞 OpenMachPay 就绪. 钱包: 0x29B0...8ae3</span>
+                    </div>
+                    <div class="mt-3 text-gray-300 text-sm border-l-2 border-blue-400 pl-3">
+                        <span class="text-white">You:</span> 分析近期BTC趋势<br>
+                        <span class="text-blue-300">🦞 查询 machpay... ($0.00002 USDC)</span><br>
+                        BTC $94,200 (+3.2% 24h), ETF +$342M
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 可用API列表：你可支付什么 -->
+        <section class="py-16 border-y border-white/5 bg-black/30">
+            <div class="container-custom">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold">你可支付什么？</h2>
+                    <p class="text-gray-400 mt-3 max-w-2xl mx-auto">真实API，真实数据，实价。每次调用都是一笔USDC微支付。</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div class="bg-white/5 rounded-2xl p-5 card-hover border border-white/10"><div class="text-xl mb-2">📈 获取行情价格</div><div class="text-blue-300 font-mono">$0.00001 / 次</div></div>
+                    <div class="bg-white/5 rounded-2xl p-5 card-hover border border-white/10"><div class="text-xl mb-2">📊 扫描市场异动</div><div class="text-blue-300 font-mono">$0.00002 / 次</div></div>
+                    <div class="bg-white/5 rounded-2xl p-5 card-hover border border-white/10"><div class="text-xl mb-2">🤖 AI交易信号</div><div class="text-blue-300 font-mono">$0.00001 / 次</div></div>
+                    <div class="bg-white/5 rounded-2xl p-5 card-hover border border-white/10"><div class="text-xl mb-2">💵 AGC内容生成</div><div class="text-blue-300 font-mono">$0.00003 / 次</div></div>
+                    <div class="bg-white/5 rounded-2xl p-5 card-hover border border-white/10"><div class="text-xl mb-2">⛓️ 高性价比TOKEN</div><div class="text-blue-300 font-mono">$0.00001 / 次</div></div>
+                    <div class="bg-white/5 rounded-2xl p-5 card-hover border border-white/10"><div class="text-xl mb-2">📉 行业垂直模型</div><div class="text-blue-300 font-mono">$0.00003 / 次</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 工作原理 -->
+        <section class="py-20">
+            <div class="container-custom">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold">工作原理</h2>
+                    <p class="text-gray-400 mt-3">无需订阅，无需账单。钱包 + USDC = 即刻访问所有付费API。</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center p-6 rounded-2xl bg-white/5 border border-white/10"><div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-2xl mx-auto mb-4">01</div><h3 class="text-xl font-semibold">1. 挑选API</h3><p class="text-gray-400 text-sm mt-2">跨多家提供商的专业加密与AI数据API，无需审批、无等候名单、无账户要求。</p></div>
+                    <div class="text-center p-6 rounded-2xl bg-white/5 border border-white/10"><div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-2xl mx-auto mb-4">02</div><h3 class="text-xl font-semibold">2. 支付 $0.00001/次</h3><p class="text-gray-400 text-sm mt-2">签署一次EIP-3009授权，从钱包扣除$0.00001 USDC。无API密钥、无订阅、无发票。</p></div>
+                    <div class="text-center p-6 rounded-2xl bg-white/5 border border-white/10"><div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-2xl mx-auto mb-4">03</div><h3 class="text-xl font-semibold">3. 数据即时返回</h3><p class="text-gray-400 text-sm mt-2">毫秒级响应，按量付费。无最低消费，无承诺，永远无账单周期。</p></div>
+                </div>
+                <div class="mt-10 text-center text-gray-400 text-sm">💡 在浏览器中试用，集成 x402 SDK，或让 AI 智能体通过 OpenMachPay 技能自主调用 API。</div>
+            </div>
+        </section>
+
+        <!-- 现场演示 (互动Demo) -->
+        <section class="py-12 border-y border-white/5 bg-black/40">
+            <div class="container-custom">
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="flex-1">
+                        <h2 class="text-2xl md:text-3xl font-bold">亲眼见证</h2>
+                        <p class="text-gray-300 mt-2">观看真实的 x402 支付流程 —— 从请求到数据返回仅需毫秒。</p>
+                        <div class="mt-4 bg-black/50 rounded-2xl p-4 border border-white/10 inline-block">
+                            <div class="flex items-center gap-3">
+                                <div id="demoStatus" class="text-sm text-gray-300">点击「运行演示」模拟 x402 支付流程</div>
+                                <button id="runDemoBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-1.5 rounded-lg text-sm transition">▶ 运行演示</button>
+                            </div>
+                            <div id="demoResult" class="mt-3 text-xs font-mono text-green-400"></div>
+                        </div>
+                        <p class="text-gray-500 text-xs mt-3">此模拟真实的 x402 流程。实际使用时可在上方 API 目录中试用。</p>
+                    </div>
+                    <div class="flex-1 bg-gradient-to-r from-blue-900/20 to-indigo-900/20 rounded-2xl p-6 border border-white/10 text-center">
+                        <span class="text-4xl block mb-2">⚡ 实时支付</span>
+                        <div class="text-sm text-gray-300">Base链 USDC 结算 · 零 gas 抽象</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 定价与透明 -->
+        <section class="py-16">
+            <div class="container-custom">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h2 class="text-3xl md:text-4xl font-bold">简单透明的定价</h2>
+                    <p class="text-gray-400 mt-2">仅按需付费，无订阅，无隐藏费用。</p>
+                </div>
+                <div class="grid md:grid-cols-4 gap-6 mt-12 text-center">
+                    <div class="bg-white/5 p-5 rounded-xl"><span class="text-3xl block">💰</span><div class="font-semibold mt-2">按次付费</div><div class="text-xs text-gray-400">每次调用固定USDC价格</div></div>
+                    <div class="bg-white/5 p-5 rounded-xl"><span class="text-3xl block">🔓</span><div class="font-semibold mt-2">无需注册</div><div class="text-xs text-gray-400">无账户，无API密钥，无KYC</div></div>
+                    <div class="bg-white/5 p-5 rounded-xl"><span class="text-3xl block">⛓️</span><div class="font-semibold mt-2">链上结算</div><div class="text-xs text-gray-400">所有支付均为Base链USDC，透明可验证</div></div>
+                    <div class="bg-white/5 p-5 rounded-xl"><span class="text-3xl block">🌍</span><div class="font-semibold mt-2">全球访问</div><div class="text-xs text-gray-400">任意钱包均可使用，无地域限制</div></div>
+                </div>
+                <div class="mt-12 bg-white/5 rounded-2xl p-6 border border-white/10 max-w-md mx-auto text-center">
+                    <div class="text-gray-300 text-sm">费用示例</div>
+                    <div class="text-2xl font-bold text-white">1,000,000 次 API 调用</div>
+                    <div class="text-blue-300 text-xl">$10 USDC</div>
+                    <div class="text-xs text-gray-400 mt-1">1,000,000 × $0.00001 = $10 USDC</div>
+                    <div class="mt-2 text-green-400 text-xs">零Gas费 · 零交易费用</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 最低要求：EVM地址+USDC -->
+        <section class="py-16 bg-gradient-to-b from-transparent to-blue-950/10">
+            <div class="container-custom text-center">
+                <h2 class="text-3xl font-bold">一个EVM地址 + USDC —— 仅此而已</h2>
+                <p class="text-gray-300 max-w-2xl mx-auto mt-3">无需注册，无API密钥，无需账单设置。全球任何智能体或开发者都可以立即开始调用付费API。</p>
+                <div class="grid md:grid-cols-3 gap-6 mt-10 text-left">
+                    <div class="bg-black/40 p-5 rounded-2xl border-l-4 border-blue-500"><div class="text-xl">🔗 任意EVM地址</div><p class="text-sm text-gray-300 mt-1">只需EVM私钥——几秒生成。智能体无需钱包应用，无需KYC，无需审批。程序化调用API。</p></div>
+                    <div class="bg-black/40 p-5 rounded-2xl border-l-4 border-blue-500"><div class="text-xl">💵 Base链 USDC</div><p class="text-sm text-gray-300 mt-1">按量付费，无月账单，无最低消费。每笔支付链上可查。<br><a href="#" class="text-blue-400 text-xs">领取测试USDC →</a></p></div>
+                    <div class="bg-black/40 p-5 rounded-2xl border-l-4 border-blue-500"><div class="text-xl">🔐 专用支付钱包</div><p class="text-sm text-gray-300 mt-1">最佳实践：使用独立钱包支付API费用，主资产完全隔离。智能体以任何规模自主运行，架构清晰，完全可控。</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SDK & 集成 -->
+        <section class="py-16 border-t border-white/5">
+            <div class="container-custom">
+                <div class="text-center mb-8"><h2 class="text-3xl font-bold">SDK & 集成</h2><p class="text-gray-400">选择您的语言，所有SDK自动处理x402支付。</p></div>
+                <div class="bg-black/40 rounded-2xl border border-white/10 p-6 overflow-x-auto">
+                    <div class="text-sm text-gray-400 mb-2">安装</div>
+                    <pre class="bg-[#0b0b10] text-gray-200"><code>$ npm install MachPay/machpay-js</code></pre>
+                    <div class="text-sm text-gray-400 mt-4">使用</div>
+                    <pre class="bg-[#0b0b10] text-gray-200"><code>import { MachPay } from "machpay"
+
+// 创建客户端 —— 自动处理 x402 支付
+const client = new MachPay({
+  privateKey: process.env.WALLET_PRIVATE_KEY
+})
+
+// 加密资金流动 —— $0.00001/次
+const flow = await client.coinank.fund.realtime({
+  productType: "SWAP"
+})
+
+// AI交易信号 —— $0.00001/次
+const signals = await client.nofxos.netflow.topRanking({
+  limit: 20
+})
+
+console.log(flow, signals)</code></pre>
+                    <div class="mt-4 text-xs text-gray-400 border-t border-white/10 pt-3">🔐 安全最佳实践：使用专用钱包进行API支付，完全与主要资产隔离。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OpenMachPay 个人AI助手 -->
+        <section class="py-20 bg-black/60">
+            <div class="container-custom">
+                <div class="flex flex-col lg:flex-row gap-10 items-center">
+                    <div class="flex-1">
+                        <span class="text-4xl mb-2 inline-block">🦞</span>
+                        <h2 class="text-3xl font-bold">OpenMachPay</h2>
+                        <p class="text-gray-300 mt-2">基于 MachPay 驱动的个人AI助手 —— 用USDC支付，无需API密钥，安装即用。</p>
+                        <div class="mt-4 bg-black/30 rounded-xl p-3 font-mono text-sm">🍎 macOS / 🐧 Linux (Windows即将推出)</div>
+                        <pre class="mt-3 bg-black/50 text-sm"><code>curl -fsSL https://machpay.ai/install.sh | bash</code></pre>
+                        <div class="grid grid-cols-2 gap-2 mt-5 text-xs text-gray-400">
+                            <div>📦 步骤1: 运行安装命令</div><div>🔐 步骤2: 自动生成钱包</div>
+                            <div>💰 步骤3: 扫描二维码充值USDC</div><div>🤖 步骤4: 开始对话，按量付费</div>
+                        </div>
+                    </div>
+                    <div class="flex-1 bg-white/5 rounded-2xl p-5 border border-white/10">
+                        <div class="flex gap-2 items-center mb-3"><span class="bg-gray-700 w-3 h-3 rounded-full"></span><span class="bg-gray-700 w-3 h-3 rounded-full"></span><span class="bg-gray-700 w-3 h-3 rounded-full"></span><span class="text-xs text-gray-400 ml-2">AI 聊天演示</span></div>
+                        <div class="bg-black/40 p-3 rounded-xl">
+                            <div class="text-blue-300 text-sm">You</div>
+                            <div class="text-gray-200 text-sm mb-3">HyperLiquid上最大的鲸鱼们在做什么？</div>
+                            <div class="text-blue-300 text-sm">🦞 查询 MachPay API... ($0.00002 USDC)</div>
+                            <div class="text-gray-200 text-sm mt-1 whitespace-pre-wrap">Top HyperLiquid 鲸鱼头寸:<br>  1. 0x3f2a… 多头 BTC  $12.4M  PnL: +$1.8M<br>  2. 0x8b1c… 多头 ETH  $8.2M   PnL: +$423K<br>  3. 0xd4e7… 空头 SOL $5.1M   PnL: -$89K<br>鲸鱼情绪: 67% 看多, 33% 看空。偏多倾向。</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 text-center text-gray-400 text-sm border-t border-white/5 pt-6">
+                    <span>💰 钱包管理: $ openclaw wallet &nbsp;&nbsp;|&nbsp;&nbsp; 🔑 私钥本地存储，永不离开设备</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 支持的平台/模型 简化展示 -->
+        <section class="py-12">
+            <div class="container-custom">
+                <div class="grid md:grid-cols-2 gap-8 text-center">
+                    <div><h3 class="text-xl font-semibold">20+ 聊天平台</h3><p class="text-gray-400 text-sm mt-1">Telegram · WhatsApp · Discord · Slack · Signal · iMessage · WeChat · IRC · Matrix · Google Chat 等</p></div>
+                    <div><h3 class="text-xl font-semibold">20+ AI 模型</h3><p class="text-gray-400 text-sm mt-1">OpenAI GPT-5.4, o3 · Anthropic Claude · Google Gemini 3.1 Pro · DeepSeek · Qwen · xAI Grok 3 · Moonshot Kimi K2</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="border-t border-white/10 py-10 text-center text-gray-500 text-sm">
+            <div class="container-custom">
+                <div class="flex flex-wrap justify-center gap-6 mb-4">
+                    <span>© 2025 MachPay</span>
+                    <a href="#" class="hover:text-blue-400">条款</a>
+                    <a href="#" class="hover:text-blue-400">隐私</a>
+                    <a href="#" class="hover:text-blue-400">状态</a>
+                    <a href="#" class="hover:text-blue-400">GitHub</a>
+                </div>
+                <p>x402 协议兼容 · 基于 Base 链构建 · 无摩擦Agent经济</p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- 演示交互脚本 -->
+    <script>
+        const runBtn = document.getElementById('runDemoBtn');
+        const demoResult = document.getElementById('demoResult');
+        const demoStatus = document.getElementById('demoStatus');
+        if(runBtn) {
+            runBtn.addEventListener('click', () => {
+                demoStatus.innerText = '⚡ 正在模拟支付流程...';
+                demoResult.innerText = '';
+                setTimeout(() => {
+                    demoStatus.innerText = '✅ 支付成功! 模拟 x402 支付: 扣除 $0.00001 USDC';
+                    demoResult.innerText = '✨ 响应数据: { "btc_price": 94200, "change": "+3.2%", "funding": "0.0021%" }';
+                    setTimeout(() => {
+                        demoStatus.innerText = '点击「运行演示」模拟 x402 支付流程';
+                    }, 4000);
+                }, 800);
+            });
+        }
+    </script>
+    <!-- 添加 Tailwind 用于辅助样式 (快速网格布局，避免手写太多) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 覆盖 tailwind 部分默认背景 */
+        body { background: #010101; }
+        .bg-black\/40, .bg-black\/30, .bg-black\/50 { background-color: rgba(0,0,0,0.4); }
+        .border-white\/10 { border-color: rgba(255,255,255,0.1); }
+        .bg-white\/5 { background-color: rgba(255,255,255,0.05); }
+        .bg-white\/10 { background-color: rgba(255,255,255,0.1); }
+    </style>
+</body>
+</html>
