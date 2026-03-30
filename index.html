@@ -196,8 +196,7 @@
                     <span>⚡ Powered by x402 协议 · Base 链</span>
                 </div>
                 <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight">
-                    为任意 API 付费<br>
-                    使用 <span class="gradient-text">USDC</span>
+                    使用 <span class="gradient-text">USDC</span>为任意 AI 付费<br>
                 </h1>
                 <p class="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto mt-6">
                     任何 AI 智能体、任何开发者、任何国家 —— 只要拥有钱包和 USDC，即刻访问所有付费 API。<br>
@@ -236,7 +235,7 @@
         <section class="py-16 border-y border-white/5 bg-black/30">
             <div class="container-custom">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold">你可支付什么？</h2>
+                    <h2 class="text-3xl md:text-4xl font-bold">你能支付哪些费用？</h2>
                     <p class="text-gray-400 mt-3 max-w-2xl mx-auto">真实API，真实数据，实价。每次调用都是一笔USDC微支付。</p>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -260,14 +259,14 @@
                 <div class="grid md:grid-cols-3 gap-8">
                     <div class="text-center p-6 rounded-2xl bg-white/5 border border-white/10"><div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-2xl mx-auto mb-4">01</div><h3 class="text-xl font-semibold">1. 挑选API</h3><p class="text-gray-400 text-sm mt-2">跨多家提供商的专业加密与AI数据API，无需审批、无等候名单、无账户要求。</p></div>
                     <div class="text-center p-6 rounded-2xl bg-white/5 border border-white/10"><div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-2xl mx-auto mb-4">02</div><h3 class="text-xl font-semibold">2. 支付 $0.00001/次</h3><p class="text-gray-400 text-sm mt-2">签署一次EIP-3009授权，从钱包扣除$0.00001 USDC。无API密钥、无订阅、无发票。</p></div>
-                    <div class="text-center p-6 rounded-2xl bg-white/5 border border-white/10"><div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-2xl mx-auto mb-4">03</div><h3 class="text-xl font-semibold">3. 数据即时返回</h3><p class="text-gray-400 text-sm mt-2">毫秒级响应，按量付费。无最低消费，无承诺，永远无账单周期。</p></div>
+                    <div class="text-center p-6 rounded-2xl bg-white/5 border border-white/10"><div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-2xl mx-auto mb-4">03</div><h3 class="text-xl font-semibold">3. 数据即时返回</h3><p class="text-gray-400 text-sm mt-2">毫秒级响应，按量付费。无最低消费，无合约限制，没有固定账单周期。</p></div>
                 </div>
                 <div class="mt-10 text-center text-gray-400 text-sm">💡 在浏览器中试用，集成 x402 SDK，或让 AI 智能体通过 OpenMachPay 技能自主调用 API。</div>
             </div>
         </section>
 
         <!-- 现场演示 (互动Demo) -->
-        <section class="py-12 border-y border-white/5 bg-black/40">
+        <!-- <section class="py-12 border-y border-white/5 bg-black/40">
             <div class="container-custom">
                 <div class="flex flex-col md:flex-row gap-8 items-center">
                     <div class="flex-1">
@@ -288,7 +287,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> -->
 
         <!-- 定价与透明 -->
         <section class="py-16">
@@ -364,11 +363,10 @@ console.log(flow, signals)</code></pre>
                     <span>🦞 基于 MachPay · x402 协议</span>
                 </div>
                 <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">
-                    由 <span class="gradient-text">OpenClaw402</span> 驱动的<br>个人AI助手
+                    <span class="gradient-text">OpenClawPay</span><br>
                 </h1>
                 <p class="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto mt-5">
-                    使用 <strong class="text-blue-300">USDC</strong> 付款，无需API密钥，无需注册。<br>
-                    安装即用 — 聊天、调用数据、访问顶级AI模型，按次付费。
+                    由 MachPay 提供技术支持的个人 AI 助手——使用 USDC 付款，无需 API 密钥，安装即可使用。
                 </p>
                 <div class="flex flex-wrap justify-center gap-3 mt-6 text-sm text-gray-400">
                     <span>⚡ 零API密钥</span>
@@ -391,7 +389,7 @@ console.log(flow, signals)</code></pre>
                         <div class="text-xs bg-white/5 px-3 py-1 rounded-full">一键安装 · 开箱即用</div>
                     </div>
                     <div class="relative mt-2">
-                        <pre id="installCommand" class="code-block text-gray-200 text-sm p-4 pr-16 overflow-x-auto rounded-xl whitespace-pre-wrap break-all">curl -fsSL https://claw402.ai/install.sh | bash</pre>
+                        <pre id="installCommand" class="code-block text-gray-200 text-sm p-4 pr-16 overflow-x-auto rounded-xl whitespace-pre-wrap break-all">curl -fsSL https://machpay.ai/install.sh | bash</pre>
                         <button id="copyBtn" class="absolute top-3 right-3 bg-gray-800 hover:bg-gray-700 text-xs px-3 py-1.5 rounded-lg transition flex items-center gap-1 border border-gray-700">
                             📋 复制
                         </button>
@@ -428,9 +426,9 @@ console.log(flow, signals)</code></pre>
                         <div class="w-12 h-12 mx-auto step-icon rounded-2xl flex items-center justify-center text-2xl mb-4">💰</div>
                         <h3 class="text-xl font-bold">步骤 3</h3>
                         <p class="text-gray-300 font-medium mt-1">充值 USDC (Base)</p>
-                        <p class="text-gray-400 text-sm mt-2">扫描下方二维码或复制地址，向钱包转入 Base 链 USDC。</p>
+                        <p class="text-gray-400 text-sm mt-2">扫描二维码或复制地址，向钱包转入 Base 链 USDC。</p>
                         <!-- 模拟二维码区域 -->
-                        <div class="mt-3 flex justify-center">
+                        <!-- <div class="mt-3 flex justify-center">
                             <div class="qr-sim w-24 h-24 rounded-xl flex items-center justify-center border border-white/20 bg-black/40">
                                 <div class="text-center">
                                     <span class="text-2xl">📱</span>
@@ -438,7 +436,7 @@ console.log(flow, signals)</code></pre>
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-2 text-[11px] font-mono bg-black/40 rounded-full px-2 py-1 inline-block text-blue-300">0x29B0...8ae3</div>
+                        <div class="mt-2 text-[11px] font-mono bg-black/40 rounded-full px-2 py-1 inline-block text-blue-300">0x29B0...8ae3</div> -->
                     </div>
                     <!-- 步骤4 -->
                     <div class="bg-white/5 rounded-2xl p-5 border border-white/10 hover:border-blue-500/50 transition-all text-center">
