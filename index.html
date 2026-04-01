@@ -1328,21 +1328,21 @@
             <!-- 第一行第一个卡片 -->
             <div class="payment-card">
                 <div class="payment-icon icon-bitcoin">₿</div>
-                <div class="payment-title">获取加密货币数据</div>
+                <div class="payment-title">加密货币行情</div>
                 <div class="payment-price">0.00001美元<span class="payment-unit">/ 次</span></div>
             </div>
             
             <!-- 第一行第二个卡片 -->
             <div class="payment-card">
                 <div class="payment-icon icon-market">📈</div>
-                <div class="payment-title">扫描市场异动</div>
+                <div class="payment-title">市场异动信号</div>
                 <div class="payment-price">0.00002美元<span class="payment-unit">/ 次</span></div>
             </div>
             
             <!-- 第一行第三个卡片 -->
             <div class="payment-card">
                 <div class="payment-icon icon-ai">🤖</div>
-                <div class="payment-title">AI交易信号</div>
+                <div class="payment-title">Agent工作流</div>
                 <div class="payment-price">0.00001美元<span class="payment-unit">/ 次</span></div>
             </div>
             
@@ -1526,9 +1526,9 @@
         </div>
 
         <div class="code-block">
-            <span class="token-keyword">import { Claw402 } from "claw402"</span><br><br>
+            <span class="token-keyword">import { MachPay } from "machpay"</span><br><br>
             <span class="token-comment">// 创建类型化客户端 -自动处理 x402付款</span><br>
-            <span class="token-keyword">const client = new Claw402 ({</span><br>
+            <span class="token-keyword">const client = new MachPay ({</span><br>
             &nbsp;&nbsp;privateKey: process.env.WALLET_PRIVATE_KEY as <span class="token-string">`0x${string}`</span>,<br>
             <span class="token-keyword">})</span><br><br>
             <span class="token-comment">// 加密基金流 - $ <span class="token-number">0.0001</span> /call（手动输入，支持自动完成）</span><br>
